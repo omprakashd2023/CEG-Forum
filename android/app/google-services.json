@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "715997695551",
+    "project_id": "ceg-forum",
+    "storage_bucket": "ceg-forum.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:715997695551:android:0a7dfdaefd4b46c29b328a",
+        "android_client_info": {
+          "package_name": "com.example.ceg_forum"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "715997695551-peh6q59fhv5qsks8hjgaq08b33mvmoue.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.ceg_forum",
+            "certificate_hash": "04943d707673c772c32b822f73bce58deb865894"
+          }
+        },
+        {
+          "client_id": "715997695551-47ugqn609sj5br9bf040fcq1sq6dilpn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiu4z1wuW9O-wfvusiJ1f91U2TM5KVXwY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "715997695551-47ugqn609sj5br9bf040fcq1sq6dilpn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "715997695551-gltkcqj5su9j7r1liv5v2tpfc0i4cooe.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.cegForum"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

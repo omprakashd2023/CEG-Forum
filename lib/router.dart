@@ -6,6 +6,8 @@ import './features/auth/pages/login_page.dart';
 import './features/home/pages/home_page.dart';
 import './features/community/pages/create_community_page.dart';
 import './features/community/pages/community_page.dart';
+import './features/community/pages/mod_tools_page.dart';
+import './features/community/pages/edit_community_page.dart';
 
 // loggedIn Routes
 final loggedInRoute = RouteMap(routes: {
@@ -13,6 +15,16 @@ final loggedInRoute = RouteMap(routes: {
   '/create-community': (_) => const MaterialPage(child: CreateCommunityPage()),
   '/r/:name': (route) => MaterialPage(
         child: CommunityPage(
+          name: route.pathParameters['name']!,
+        ),
+      ),
+  '/mod-tools/:name': (route) => MaterialPage(
+        child: ModToolsPage(
+          name: route.pathParameters['name']!,
+        ),
+      ),
+  '/edit-community/:name': (route) => MaterialPage(
+        child: EditCommunityPage(
           name: route.pathParameters['name']!,
         ),
       ),

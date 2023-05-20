@@ -7,7 +7,7 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:715997695551:android:0a7dfdaefd4b46c29b328a",
+        "mobilesdk_app_id": "1:715997695551:android:b3e3a8a08601582e9b328a",
         "android_client_info": {
           "package_name": "com.example.ceg_forum"
         }
@@ -22,7 +22,7 @@
           }
         },
         {
-          "client_id": "715997695551-47ugqn609sj5br9bf040fcq1sq6dilpn.apps.googleusercontent.com",
+          "client_id": "715997695551-12tdpe99f0nob5neci88gqu6krjk80n3.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -35,7 +35,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "715997695551-47ugqn609sj5br9bf040fcq1sq6dilpn.apps.googleusercontent.com",
+              "client_id": "715997695551-12tdpe99f0nob5neci88gqu6krjk80n3.apps.googleusercontent.com",
               "client_type": 3
             },
             {

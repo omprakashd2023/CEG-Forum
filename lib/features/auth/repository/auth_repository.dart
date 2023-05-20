@@ -60,6 +60,7 @@ class AuthRepository {
       UserCredential userCredential =
           await _auth.signInWithCredential(credential);
       if (userCredential.additionalUserInfo!.isNewUser) {
+        print('New User');
         userModel = UserModel(
           name: userCredential.user!.displayName!,
           email: userCredential.user!.email!,
@@ -72,6 +73,7 @@ class AuthRepository {
         );
         await _users.doc(userCredential.user!.uid).set(userModel.toMap());
       } else {
+        print('Old User');
         userModel = await getUserData(userCredential.user!.uid).first;
       }
       return right(userModel);
@@ -85,6 +87,17 @@ class AuthRepository {
         ),
       );
     }
+  }
+
+  bool isUserExists(String uid) {
+    _users.doc(uid).get().then((doc) {
+      if (doc.exists) {
+        return true;
+      } else {
+        return false;
+      }
+    });
+    return false;
   }
 
   Stream<UserModel> getUserData(String uid) {

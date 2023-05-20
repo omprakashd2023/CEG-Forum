@@ -72,4 +72,22 @@ class CommunityRepository {
           ),
         );
   }
+
+  FutureVoid editCommunity(Community community) async {
+    try {
+      return right(
+        _communities.doc(community.name).update(
+              community.toMap(),
+            ),
+      );
+    } on FirebaseException catch (err) {
+      throw err.message!;
+    } catch (err) {
+      return left(
+        Failure(
+          err.toString(),
+        ),
+      );
+    }
+  }
 }

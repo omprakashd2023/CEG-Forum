@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 
 //Controllers
 import '../controller/community_controller.dart';
@@ -15,6 +16,10 @@ class CommunityPage extends ConsumerWidget {
     super.key,
     required this.name,
   });
+
+  void navigateToModTools(BuildContext context) {
+    Routemaster.of(context).push('/mod-tools/$name');
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -64,7 +69,8 @@ class CommunityPage extends ConsumerWidget {
                               ),
                               community.moderators.contains(user!.uid)
                                   ? OutlinedButton(
-                                      onPressed: () {},
+                                      onPressed: () =>
+                                          navigateToModTools(context),
                                       style: ElevatedButton.styleFrom(
                                           shape: RoundedRectangleBorder(
                                             borderRadius:
@@ -85,7 +91,10 @@ class CommunityPage extends ConsumerWidget {
                                           padding: const EdgeInsets.symmetric(
                                             horizontal: 25.0,
                                           )),
-                                      child: Text(community.members.contains(user.uid) ? 'Joined' : 'Join'),
+                                      child: Text(
+                                          community.members.contains(user.uid)
+                                              ? 'Joined'
+                                              : 'Join'),
                                     ),
                             ],
                           ),

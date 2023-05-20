@@ -45,17 +45,17 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyCO1M2xY_olVMeJej5R1ZFdv4k8PbJeJTk',
-    appId: '1:715997695551:web:ec15e5c00460f51d9b328a',
+    appId: '1:715997695551:web:7a2556cbf26724989b328a',
     messagingSenderId: '715997695551',
     projectId: 'ceg-forum',
     authDomain: 'ceg-forum.firebaseapp.com',
     storageBucket: 'ceg-forum.appspot.com',
-    measurementId: 'G-M2JWP0RS2F',
+    measurementId: 'G-3G72HGHZLY',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBiu4z1wuW9O-wfvusiJ1f91U2TM5KVXwY',
-    appId: '1:715997695551:android:0a7dfdaefd4b46c29b328a',
+    appId: '1:715997695551:android:b3e3a8a08601582e9b328a',
     messagingSenderId: '715997695551',
     projectId: 'ceg-forum',
     storageBucket: 'ceg-forum.appspot.com',
@@ -63,20 +63,22 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBIZXKPeeA32P1R2Q6o82xYJbGuBVpYkCA',
-    appId: '1:715997695551:ios:61d3091c43eeb4b19b328a',
+    appId: '1:715997695551:ios:7afb87ff056d0e749b328a',
     messagingSenderId: '715997695551',
     projectId: 'ceg-forum',
     storageBucket: 'ceg-forum.appspot.com',
+    androidClientId: '715997695551-peh6q59fhv5qsks8hjgaq08b33mvmoue.apps.googleusercontent.com',
     iosClientId: '715997695551-gltkcqj5su9j7r1liv5v2tpfc0i4cooe.apps.googleusercontent.com',
     iosBundleId: 'com.example.cegForum',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyBIZXKPeeA32P1R2Q6o82xYJbGuBVpYkCA',
-    appId: '1:715997695551:ios:61d3091c43eeb4b19b328a',
+    appId: '1:715997695551:ios:7afb87ff056d0e749b328a',
     messagingSenderId: '715997695551',
     projectId: 'ceg-forum',
     storageBucket: 'ceg-forum.appspot.com',
+    androidClientId: '715997695551-peh6q59fhv5qsks8hjgaq08b33mvmoue.apps.googleusercontent.com',
     iosClientId: '715997695551-gltkcqj5su9j7r1liv5v2tpfc0i4cooe.apps.googleusercontent.com',
     iosBundleId: 'com.example.cegForum',
   );

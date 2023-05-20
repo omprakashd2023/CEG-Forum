@@ -25,8 +25,9 @@ class Colours {
       backgroundColor: drawerColor,
     ),
     primaryColor: redColor,
-    backgroundColor:
-        drawerColor, // will be used as alternative background color
+    colorScheme: const ColorScheme.dark(
+        background:
+            drawerColor), // will be used as alternative background color
   );
 
   static var lightModeAppTheme = ThemeData.light().copyWith(

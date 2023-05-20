@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 class Community {
   final String id;
   final String name;

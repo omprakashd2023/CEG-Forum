@@ -61,7 +61,7 @@ class CommunityPage extends ConsumerWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'c/${community.name}',
+                                'ceg/${community.name}',
                                 style: const TextStyle(
                                   fontSize: 20.0,
                                   fontWeight: FontWeight.bold,

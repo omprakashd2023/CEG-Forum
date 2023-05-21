@@ -5,6 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'firebase_options.dart';
 import 'package:routemaster/routemaster.dart';
 
+//Constants
+import '../../../core/constants/constants.dart';
+
 //Controllers
 import './features/auth/controller/auth_controller.dart';
 
@@ -63,7 +66,7 @@ class _MyAppState extends ConsumerState<MyApp> {
               routesBuilder: (context) {
                 if (data != null) {
                   getData(ref, data);
-                  if(userModel!=null) {
+                  if (userModel != null) {
                     return loggedInRoute;
                   }
                 }

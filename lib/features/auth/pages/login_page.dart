@@ -1,9 +1,11 @@
-import 'package:ceg_forum/features/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 //Constants
 import '../../../core/constants/constants.dart';
+
+//Controller
+import '../controller/auth_controller.dart';
 
 //Widgets
 import '../../../core/widgets/sign_in_button.dart';

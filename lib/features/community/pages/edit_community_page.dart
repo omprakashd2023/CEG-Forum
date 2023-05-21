@@ -1,8 +1,10 @@
 import 'dart:io';
-import 'package:ceg_forum/models/community_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dotted_border/dotted_border.dart';
+
+//Models
+import '../../../models/community_model.dart';
 
 //Utilities
 import '../../../core/utils.dart';

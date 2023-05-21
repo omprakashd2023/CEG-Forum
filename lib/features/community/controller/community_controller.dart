@@ -22,6 +22,17 @@ import '../repository/community_repository.dart';
 //Models
 import '../../../models/community_model.dart';
 
+final communityControllerProvider =
+    StateNotifierProvider<CommunityController, bool>((ref) {
+  final communityRepository = ref.watch(communityRepositoryProvider);
+  final storageRepository = ref.watch(firebaseStorageProvider);
+  return CommunityController(
+    communityRepository: communityRepository,
+    ref: ref,
+    storageRepository: storageRepository,
+  );
+});
+
 final userCommunityProvider = StreamProvider((ref) {
   final communityController = ref.watch(communityControllerProvider.notifier);
   return communityController.getUserCommunities();
@@ -33,15 +44,8 @@ final getCommunityByNameProvider = StreamProvider.family((ref, String name) {
       .getCommunityByName(name);
 });
 
-final communityControllerProvider =
-    StateNotifierProvider<CommunityController, bool>((ref) {
-  final communityRepository = ref.watch(communityRepositoryProvider);
-  final storageRepository = ref.watch(firebaseStorageProvider);
-  return CommunityController(
-    communityRepository: communityRepository,
-    ref: ref,
-    storageRepository: storageRepository,
-  );
+final searchCommunityProvider = StreamProvider.family((ref, String query) {
+  return ref.watch(communityControllerProvider.notifier).searchCommunity(query);
 });
 
 class CommunityController extends StateNotifier<bool> {
@@ -56,6 +60,19 @@ class CommunityController extends StateNotifier<bool> {
         _ref = ref,
         _storageRepository = storageRepository,
         super(false);
+
+  Stream<List<Community>> getUserCommunities() {
+    final uid = _ref.read(userProvider)!.uid;
+    return _communityRepository.getUserCommunities(uid);
+  }
+
+  Stream<Community> getCommunityByName(String name) {
+    return _communityRepository.getCommunityByName(name);
+  }
+
+  Stream<List<Community>> searchCommunity(String query) {
+    return _communityRepository.searchCommunity(query);
+  }
 
   void createCommunity(String name, BuildContext context) async {
     state = true;
@@ -77,15 +94,6 @@ class CommunityController extends StateNotifier<bool> {
         Routemaster.of(context).pop();
       },
     );
-  }
-
-  Stream<List<Community>> getUserCommunities() {
-    final uid = _ref.read(userProvider)!.uid;
-    return _communityRepository.getUserCommunities(uid);
-  }
-
-  Stream<Community> getCommunityByName(String name) {
-    return _communityRepository.getCommunityByName(name);
   }
 
   void editCommunity({

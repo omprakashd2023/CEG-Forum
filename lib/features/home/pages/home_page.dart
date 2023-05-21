@@ -6,12 +6,29 @@ import '../../auth/controller/auth_controller.dart';
 
 //Widgets
 import '../widgets/community_list_drawer.dart';
+import '../widgets/user_profile_drawer.dart';
+
+//Delegates
+import '../delegates/search_community_delegate.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   void displayDrawer(BuildContext context) {
     Scaffold.of(context).openDrawer();
+  }
+
+  void displayEndDrawer(BuildContext context) {
+    Scaffold.of(context).openEndDrawer();
+  }
+
+  void showSearchDelegate(BuildContext context, WidgetRef ref) {
+    showSearch(
+      context: context,
+      delegate: SearchCommunityDelegate(
+        ref: ref,
+      ),
+    );
   }
 
   @override
@@ -30,18 +47,23 @@ class HomePage extends ConsumerWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => showSearchDelegate(context, ref),
             icon: const Icon(Icons.search),
           ),
-          IconButton(
-            onPressed: (){},
-            icon: CircleAvatar(
-              backgroundImage: NetworkImage(user.avatar),
-            ),
+          Builder(
+            builder: (context) {
+              return IconButton(
+                onPressed: () => displayEndDrawer(context),
+                icon: CircleAvatar(
+                  backgroundImage: NetworkImage(user.avatar),
+                ),
+              );
+            }
           ),
         ],
       ),
       drawer: const CommunityListDrawer(),
+      endDrawer: const UserProfileDrawer(),
     );
   }
 }

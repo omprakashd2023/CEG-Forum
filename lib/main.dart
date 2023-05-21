@@ -6,7 +6,6 @@ import 'firebase_options.dart';
 import 'package:routemaster/routemaster.dart';
 
 //Constants
-import '../../../core/constants/constants.dart';
 
 //Controllers
 import './features/auth/controller/auth_controller.dart';

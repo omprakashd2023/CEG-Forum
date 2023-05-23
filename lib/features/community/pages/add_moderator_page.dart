@@ -21,6 +21,7 @@ class AddModeratorPage extends ConsumerStatefulWidget {
 class _AddModeratorPageState extends ConsumerState<AddModeratorPage> {
   Set<String> uids = {};
   int cnt = 0;
+  int ctr = 0;
   void addUid(String uid) {
     setState(() {
       uids.add(uid);
@@ -60,12 +61,13 @@ class _AddModeratorPageState extends ConsumerState<AddModeratorPage> {
                 final member = community.members[index];
                 return ref.watch(getUserDataProvider(member)).when(
                       data: (user) {
-                        //fixme: there is a bug while fetching the moderators
                         if (community.moderators.contains(user.uid) &&
+                            !uids.contains(user.uid) &&
                             cnt == 0) {
-                          print('adding ${user.uid}');
                           uids.add(user.uid);
-                          cnt++;
+                          ctr == community.moderators.length - 1
+                              ? cnt = 1
+                              : ctr++;
                         }
                         return CheckboxListTile(
                           value: uids.contains(user.uid),

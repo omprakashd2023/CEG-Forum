@@ -1,7 +1,9 @@
 class Community {
   final String id;
   final String name;
+  //todo: Add description and admin fields
   // final String description;
+  // final String admin;
   final String avatar;
   final String banner;
   final List<String> members;

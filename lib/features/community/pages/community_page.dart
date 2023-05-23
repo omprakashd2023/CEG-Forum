@@ -10,6 +10,9 @@ import '../../auth/controller/auth_controller.dart';
 import '../../../core/widgets/error_text.dart';
 import '../../../core/widgets/loader.dart';
 
+//Models
+import '../../../models/community_model.dart';
+
 class CommunityPage extends ConsumerWidget {
   final String name;
   const CommunityPage({
@@ -19,6 +22,12 @@ class CommunityPage extends ConsumerWidget {
 
   void navigateToModTools(BuildContext context) {
     Routemaster.of(context).push('/mod-tools/$name');
+  }
+
+  void joinCommunity(WidgetRef ref, Community community, BuildContext context) {
+    ref
+        .read(communityControllerProvider.notifier)
+        .joinCommunity(community, context);
   }
 
   @override
@@ -82,7 +91,7 @@ class CommunityPage extends ConsumerWidget {
                                       child: const Text('Mod Tools'),
                                     )
                                   : OutlinedButton(
-                                      onPressed: () {},
+                                      onPressed: () => joinCommunity(ref, community, context),
                                       style: ElevatedButton.styleFrom(
                                           shape: RoundedRectangleBorder(
                                             borderRadius:

@@ -5,8 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'firebase_options.dart';
 import 'package:routemaster/routemaster.dart';
 
-//Constants
-
 //Controllers
 import './features/auth/controller/auth_controller.dart';
 

@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:routemaster/routemaster.dart';
 
 //Constants
@@ -9,6 +10,9 @@ import '../../../core/constants/constants.dart';
 
 //Storage Repository
 import '../../../core/providers/storage_repository_provider.dart';
+
+//Failure
+import '../../../core/failure.dart';
 
 //Utilities
 import '../../../core/utils.dart';
@@ -124,6 +128,40 @@ class CommunityController extends StateNotifier<bool> {
     res.fold(
       (l) => showSnackBar(context, l.message),
       (r) => Routemaster.of(context).pop(),
+    );
+  }
+
+  void joinCommunity(Community community, BuildContext context) async {
+    final user = _ref.read(userProvider)!;
+    Either<Failure, void> result;
+    if (community.members.contains(user.uid)) {
+      result =
+          await _communityRepository.leaveCommunity(community.name, user.uid);
+    } else {
+      result =
+          await _communityRepository.joinCommunity(community.name, user.uid);
+    }
+    result.fold(
+      (l) => showSnackBar(context, l.message),
+      (r) => showSnackBar(
+        context,
+        community.members.contains(user.uid)
+            ? 'You left the community'
+            : 'You joined the community',
+      ),
+    );
+  }
+
+  void addModerators(
+      String communityName, List<String> uids, BuildContext context) async {
+    final result =
+        await _communityRepository.addModerators(communityName, uids);
+    result.fold(
+      (l) => showSnackBar(context, l.message),
+      (r) {
+        showSnackBar(context, 'Moderators added successfully');
+        Routemaster.of(context).pop();
+      },
     );
   }
 }

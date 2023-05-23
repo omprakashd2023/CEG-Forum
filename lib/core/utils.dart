@@ -6,6 +6,7 @@ void showSnackBar(BuildContext context, String message) {
     ..hideCurrentSnackBar()
     ..showSnackBar(
       SnackBar(
+        duration: const Duration(seconds: 1),
         content: Text(
           message,
         ),

@@ -91,15 +91,57 @@ class CommunityRepository {
     }
   }
 
+  FutureVoid joinCommunity(String communityName, String userId) async {
+    try {
+      return right(
+        _communities.doc(communityName).update(
+          {
+            'members': FieldValue.arrayUnion([userId])
+          },
+        ),
+      );
+    } on FirebaseException catch (err) {
+      throw err.message!;
+    } catch (err) {
+      return left(
+        Failure(
+          err.toString(),
+        ),
+      );
+    }
+  }
+
+  FutureVoid leaveCommunity(String communityName, String userId) async {
+    try {
+      return right(
+        _communities.doc(communityName).update(
+          {
+            'members': FieldValue.arrayRemove([userId])
+          },
+        ),
+      );
+    } on FirebaseException catch (err) {
+      throw err.message!;
+    } catch (err) {
+      return left(
+        Failure(
+          err.toString(),
+        ),
+      );
+    }
+  }
+
   Stream<List<Community>> searchCommunity(String query) {
     return _communities
         .where(
           'name',
           isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
-          isLessThan: query.isEmpty ? null : query.substring(0, query.length - 1) +
-              String.fromCharCode(
-                query.codeUnitAt(query.length - 1) + 1,
-              ),
+          isLessThan: query.isEmpty
+              ? null
+              : query.substring(0, query.length - 1) +
+                  String.fromCharCode(
+                    query.codeUnitAt(query.length - 1) + 1,
+                  ),
         )
         .snapshots()
         .map(
@@ -115,5 +157,23 @@ class CommunityRepository {
         return communities;
       },
     );
+  }
+
+  FutureVoid addModerators(String communityName, List<String> uids) async {
+    try {
+      return right(
+        _communities.doc(communityName).update({
+          'moderators': uids,
+        }),
+      );
+    } on FirebaseException catch (err) {
+      throw err.message!;
+    } catch (err) {
+      return left(
+        Failure(
+          err.toString(),
+        ),
+      );
+    }
   }
 }

@@ -11,6 +11,7 @@ import './features/community/pages/edit_community_page.dart';
 import './features/community/pages/add_moderator_page.dart';
 import './features/user_profile/pages/user_profile_page.dart';
 import './features/user_profile/pages/edit_profile_page.dart';
+import './features/posts/pages/add_post_type.dart';
 
 // loggedIn Routes
 final loggedInRoute = RouteMap(routes: {
@@ -44,6 +45,11 @@ final loggedInRoute = RouteMap(routes: {
   '/edit-profile/:uid': (route) => MaterialPage(
         child: EditProfilePage(
           uid: route.pathParameters['uid']!,
+        ),
+      ),
+  '/add-post/:type': (route) => MaterialPage(
+        child: AddPostTypePage(
+          type: route.pathParameters['type']!,
         ),
       ),
 });

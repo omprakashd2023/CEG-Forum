@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 
 //Models
 import '../../../models/user_model.dart';
@@ -50,7 +51,10 @@ class AuthController extends StateNotifier<bool> {
     final user = await _authRepository.signInWithGoogle();
     state = false;
     user.fold(
-      (l) => showSnackBar(context, l.message),
+      (l) {
+        showSnackBar(context, l.message);
+        Routemaster.of(context).pop();
+      },
       (userModel) => _ref.read(userProvider.notifier).update(
             (state) => userModel,
           ),

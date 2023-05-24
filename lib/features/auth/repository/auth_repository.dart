@@ -60,7 +60,6 @@ class AuthRepository {
       UserCredential userCredential =
           await _auth.signInWithCredential(credential);
       if (userCredential.additionalUserInfo!.isNewUser) {
-        print('New User');
         userModel = UserModel(
           name: userCredential.user!.displayName!,
           email: userCredential.user!.email!,
@@ -89,17 +88,6 @@ class AuthRepository {
     }
   }
 
-  bool isUserExists(String uid) {
-    _users.doc(uid).get().then((doc) {
-      if (doc.exists) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-    return false;
-  }
-
   Stream<UserModel> getUserData(String uid) {
     return _users.doc(uid).snapshots().map(
           (snapshot) => UserModel.fromMap(
@@ -108,7 +96,7 @@ class AuthRepository {
         );
   }
 
-  void logout() async{
+  void logout() async {
     await _googleSignIn.signOut();
     await _auth.signOut();
   }

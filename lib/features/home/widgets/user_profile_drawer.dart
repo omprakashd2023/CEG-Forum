@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:routemaster/routemaster.dart';
 
 //Controller
 import '../../auth/controller/auth_controller.dart';
@@ -10,8 +11,16 @@ import '../../../theme/colours.dart';
 class UserProfileDrawer extends ConsumerWidget {
   const UserProfileDrawer({super.key});
 
-  void logout(WidgetRef ref){
+  void logout(WidgetRef ref) {
     ref.read(authControllerProvider.notifier).logout();
+  }
+
+  void navigateToUserProfile(BuildContext context, String uid) {
+    Routemaster.of(context).push('/user/$uid');
+  }
+
+  void toggleTheme(WidgetRef ref) {
+    ref.read(themeNotifierProvider.notifier).toggleTheme();
   }
 
   @override
@@ -46,11 +55,12 @@ class UserProfileDrawer extends ConsumerWidget {
                   ListTile(
                     title: const Text('User Profile'),
                     leading: const Icon(Icons.person),
-                    onTap: () {},
+                    onTap: () => navigateToUserProfile(context, user.uid),
                   ),
                   Switch.adaptive(
-                    value: true,
-                    onChanged: (value) {},
+                    value: ref.watch(themeNotifierProvider.notifier).mode ==
+                        ThemeMode.dark,
+                    onChanged: (value) => toggleTheme(ref),
                   ),
                 ],
               ),

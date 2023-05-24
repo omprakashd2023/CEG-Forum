@@ -9,6 +9,8 @@ import './features/community/pages/community_page.dart';
 import './features/community/pages/mod_tools_page.dart';
 import './features/community/pages/edit_community_page.dart';
 import './features/community/pages/add_moderator_page.dart';
+import './features/user_profile/pages/user_profile_page.dart';
+import './features/user_profile/pages/edit_profile_page.dart';
 
 // loggedIn Routes
 final loggedInRoute = RouteMap(routes: {
@@ -29,9 +31,19 @@ final loggedInRoute = RouteMap(routes: {
           name: route.pathParameters['name']!,
         ),
       ),
-      '/add-moderator/:name': (route) => MaterialPage(
+  '/add-moderator/:name': (route) => MaterialPage(
         child: AddModeratorPage(
           name: route.pathParameters['name']!,
+        ),
+      ),
+  '/user/:uid': (route) => MaterialPage(
+        child: UserProfilePage(
+          uid: route.pathParameters['uid']!,
+        ),
+      ),
+  '/edit-profile/:uid': (route) => MaterialPage(
+        child: EditProfilePage(
+          uid: route.pathParameters['uid']!,
         ),
       ),
 });

@@ -103,7 +103,14 @@ class _EditCommunityPageState extends ConsumerState<EditCommunityPage> {
                                   borderRadius: BorderRadius.circular(10.0),
                                 ),
                                 child: bannerImage != null
-                                    ? Image.file(bannerImage!)
+                                    ? ClipRRect(
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                        child: Image.file(
+                                          bannerImage!,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )
                                     : community.banner.isEmpty ||
                                             community.banner ==
                                                 Constants.bannerDefault

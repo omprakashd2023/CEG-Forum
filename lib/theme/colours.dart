@@ -1,6 +1,13 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+final themeNotifierProvider =
+    StateNotifierProvider<ThemeNotifier, ThemeData>((ref) {
+  return ThemeNotifier();
+});
 
 class Colours {
   // Colors
@@ -34,8 +41,8 @@ class Colours {
     scaffoldBackgroundColor: whiteColor,
     cardColor: greyColor,
     appBarTheme: const AppBarTheme(
+      foregroundColor: blackColor,
       backgroundColor: whiteColor,
-      elevation: 0,
       iconTheme: IconThemeData(
         color: blackColor,
       ),
@@ -44,6 +51,45 @@ class Colours {
       backgroundColor: whiteColor,
     ),
     primaryColor: redColor,
-    backgroundColor: whiteColor,
+    colorScheme: const ColorScheme.dark(background: whiteColor),
   );
+}
+
+class ThemeNotifier extends StateNotifier<ThemeData> {
+  ThemeMode _mode;
+  ThemeNotifier({
+    ThemeMode mode = ThemeMode.light,
+  })  : _mode = mode,
+        super(
+          Colours.darkModeAppTheme,
+        ) {
+    getTheme();
+  }
+
+  ThemeMode get mode => _mode;
+
+  void getTheme() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    final theme = prefs.getString('theme');
+    if (theme == 'light') {
+      _mode = ThemeMode.light;
+      state = Colours.lightModeAppTheme;
+    } else {
+      _mode = ThemeMode.dark;
+      state = Colours.darkModeAppTheme;
+    }
+  }
+
+  void toggleTheme() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (_mode == ThemeMode.dark) {
+      _mode = ThemeMode.light;
+      state = Colours.lightModeAppTheme;
+      prefs.setString('theme', 'light');
+    } else {
+      _mode = ThemeMode.dark;
+      state = Colours.darkModeAppTheme;
+      prefs.setString('theme', 'dark');
+    }
+  }
 }

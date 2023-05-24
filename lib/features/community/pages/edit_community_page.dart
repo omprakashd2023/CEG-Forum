@@ -76,7 +76,7 @@ class _EditCommunityPageState extends ConsumerState<EditCommunityPage> {
                 ),
               ],
             ),
-            backgroundColor: Colours.darkModeAppTheme.colorScheme.background,
+            backgroundColor: Theme.of(context).colorScheme.background,
             body: isLoading
                 ? const Center(
                     child: CircularProgressIndicator(),
@@ -94,7 +94,7 @@ class _EditCommunityPageState extends ConsumerState<EditCommunityPage> {
                               dashPattern: const [10, 4],
                               radius: const Radius.circular(20.0),
                               strokeCap: StrokeCap.round,
-                              color: Colours.darkModeAppTheme.textTheme
+                              color: Theme.of(context).textTheme
                                   .displayMedium!.color!,
                               child: Container(
                                 width: double.infinity,

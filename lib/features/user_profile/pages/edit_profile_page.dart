@@ -89,7 +89,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                 ),
               ],
             ),
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            backgroundColor: Theme.of(context).colorScheme.background,
             body: isLoading
                 ? const Center(
                     child: Loader(),
@@ -109,7 +109,10 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                                   dashPattern: const [10, 4],
                                   radius: const Radius.circular(20.0),
                                   strokeCap: StrokeCap.round,
-                                  color: Theme.of(context).primaryColor,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .displayMedium!
+                                      .color!,
                                   child: Container(
                                     width: double.infinity,
                                     height: 150.0,

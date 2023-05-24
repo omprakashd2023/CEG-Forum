@@ -41,11 +41,11 @@ class Colours {
     scaffoldBackgroundColor: whiteColor,
     cardColor: greyColor,
     appBarTheme: const AppBarTheme(
-      foregroundColor: blackColor,
       backgroundColor: whiteColor,
       iconTheme: IconThemeData(
         color: blackColor,
       ),
+      
     ),
     drawerTheme: const DrawerThemeData(
       backgroundColor: whiteColor,

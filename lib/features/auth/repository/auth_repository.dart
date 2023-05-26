@@ -70,9 +70,10 @@ class AuthRepository {
           karma: 0,
           awards: [],
         );
-        await _users.doc(userCredential.user!.uid).set(userModel.toMap());
+        await _users.doc(userCredential.user!.uid).set(
+              userModel.toMap(),
+            );
       } else {
-        print('Old User');
         userModel = await getUserData(userCredential.user!.uid).first;
       }
       return right(userModel);

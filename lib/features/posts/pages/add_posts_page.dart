@@ -21,7 +21,7 @@ class AddPostsPage extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           GestureDetector(
-            onTap: ()=>navigateToAddPostTypePage(context, 'image'),
+            onTap: () => navigateToAddPostTypePage(context, 'image'),
             child: SizedBox(
               height: cardHeight,
               width: cardWidth,
@@ -38,6 +38,7 @@ class AddPostsPage extends ConsumerWidget {
                   ),
                 ),
               ),
+              
             ),
           ),
           GestureDetector(

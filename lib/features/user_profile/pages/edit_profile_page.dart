@@ -13,9 +13,6 @@ import '../../../core/constants/constants.dart';
 import '../../../core/widgets/error_text.dart';
 import '../../../core/widgets/loader.dart';
 
-//Theme Data
-import '../../../theme/colours.dart';
-
 //Controllers
 import '../controller/user_profile_controller.dart';
 import '../../auth/controller/auth_controller.dart';

@@ -16,6 +16,7 @@ import '../../../core/type_def.dart';
 
 //Models
 import '../../../models/community_model.dart';
+import '../../../models/post_model.dart';
 
 final communityRepositoryProvider = Provider((ref) {
   return CommunityRepository(
@@ -31,6 +32,8 @@ class CommunityRepository {
 
   CollectionReference get _communities =>
       _firestore.collection(FirebaseConstants.communitiesCollection);
+  CollectionReference get _posts =>
+      _firestore.collection(FirebaseConstants.postsCollection);
 
   FutureVoid createCommunity(Community community) async {
     try {
@@ -175,5 +178,19 @@ class CommunityRepository {
         ),
       );
     }
+  }
+
+  Stream<List<Post>> getCommunityPosts(String name) {
+    return _posts
+        .where('communityName', isEqualTo: name)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map(
+              (doc) => Post.fromMap(
+                doc.data() as Map<String, dynamic>,
+              ),
+            )
+            .toList());
   }
 }

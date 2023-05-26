@@ -49,6 +49,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider)!;
+    final isGuest = user.isAuthenticated == 'false' ? true : false;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Home'),
@@ -75,8 +76,10 @@ class _HomePageState extends ConsumerState<HomePage> {
       ),
       body: Constants.tabWidgets[_page],
       drawer: const CommunityListDrawer(),
-      endDrawer: const UserProfileDrawer(),
-      bottomNavigationBar: BottomNavigationBar(
+      endDrawer: isGuest ? null : const UserProfileDrawer(),
+      bottomNavigationBar: isGuest
+          ? null
+          : BottomNavigationBar(
         selectedItemColor: Theme.of(context).iconTheme.color,
         backgroundColor: Theme.of(context).colorScheme.background,
         items: const [

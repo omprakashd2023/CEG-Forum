@@ -32,9 +32,10 @@ class Colours {
       backgroundColor: drawerColor,
     ),
     primaryColor: redColor,
-    colorScheme: const ColorScheme.dark(
-        background:
-            drawerColor), // will be used as alternative background color
+    colorScheme: ColorScheme.dark(
+      background: drawerColor,
+      error: redColor,
+    ), // will be used as alternative background color
   );
 
   static var lightModeAppTheme = ThemeData.light().copyWith(
@@ -45,13 +46,15 @@ class Colours {
       iconTheme: IconThemeData(
         color: blackColor,
       ),
-      
     ),
     drawerTheme: const DrawerThemeData(
       backgroundColor: whiteColor,
     ),
     primaryColor: redColor,
-    colorScheme: const ColorScheme.dark(background: whiteColor),
+    colorScheme: ColorScheme.light(
+      background: whiteColor,
+      error: redColor,
+    ),
   );
 }
 

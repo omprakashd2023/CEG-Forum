@@ -4,10 +4,12 @@ import 'package:routemaster/routemaster.dart';
 
 //Controllers
 import '../../auth/controller/auth_controller.dart';
+import '../controller/user_profile_controller.dart';
 
 //Widgets
 import '../../../core/widgets/error_text.dart';
 import '../../../core/widgets/loader.dart';
+import '../../../core/widgets/post_tile.dart';
 
 class UserProfilePage extends ConsumerWidget {
   final String uid;
@@ -56,7 +58,8 @@ class UserProfilePage extends ConsumerWidget {
                               alignment: Alignment.bottomLeft,
                               padding: const EdgeInsets.all(20.0),
                               child: OutlinedButton(
-                                onPressed: () => navigateToEditProfilePage(context),
+                                onPressed: () =>
+                                    navigateToEditProfilePage(context),
                                 style: ElevatedButton.styleFrom(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20.0),
@@ -105,9 +108,24 @@ class UserProfilePage extends ConsumerWidget {
                   ),
                 ];
               },
-              body: const Center(
-                child: Text('Displaying Posts'),
-              ),
+              body: ref.watch(getUserPostsProvider(uid)).when(
+                    data: (data) {
+                      return ListView.builder(
+                        itemCount: data.length,
+                        itemBuilder: (context, index) {
+                          final post = data[index];
+                          return PostTile(
+                            post: post,
+                          );
+                        },
+                      );
+                    },
+                    error: (error, stackTrace) {
+                      print(error.toString());
+                      return ErrorText(errorText: error.toString());
+                    },
+                    loading: () => const Loader(),
+                  ),
             ),
             error: (error, stackTrace) => ErrorText(
               errorText: error.toString(),

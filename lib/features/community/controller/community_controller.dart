@@ -24,6 +24,7 @@ import '../../auth/controller/auth_controller.dart';
 import '../repository/community_repository.dart';
 
 //Models
+import '../../../models/post_model.dart';
 import '../../../models/community_model.dart';
 
 final communityControllerProvider =
@@ -37,9 +38,9 @@ final communityControllerProvider =
   );
 });
 
-final userCommunityProvider = StreamProvider((ref) {
+final userCommunityProvider = StreamProvider.family((ref, String uid) {
   final communityController = ref.watch(communityControllerProvider.notifier);
-  return communityController.getUserCommunities();
+  return communityController.getUserCommunities(uid);
 });
 
 final getCommunityByNameProvider = StreamProvider.family((ref, String name) {
@@ -50,6 +51,12 @@ final getCommunityByNameProvider = StreamProvider.family((ref, String name) {
 
 final searchCommunityProvider = StreamProvider.family((ref, String query) {
   return ref.watch(communityControllerProvider.notifier).searchCommunity(query);
+});
+
+final getCommunityPostsProvider = StreamProvider.family((ref, String family) {
+  return ref
+      .read(communityControllerProvider.notifier)
+      .getCommunityPosts(family);
 });
 
 class CommunityController extends StateNotifier<bool> {
@@ -65,8 +72,7 @@ class CommunityController extends StateNotifier<bool> {
         _storageRepository = storageRepository,
         super(false);
 
-  Stream<List<Community>> getUserCommunities() {
-    final uid = _ref.read(userProvider)!.uid;
+  Stream<List<Community>> getUserCommunities(String uid) {
     return _communityRepository.getUserCommunities(uid);
   }
 
@@ -76,6 +82,10 @@ class CommunityController extends StateNotifier<bool> {
 
   Stream<List<Community>> searchCommunity(String query) {
     return _communityRepository.searchCommunity(query);
+  }
+
+  Stream<List<Post>> getCommunityPosts(String name) {
+    return _communityRepository.getCommunityPosts(name);
   }
 
   void createCommunity(String name, BuildContext context) async {

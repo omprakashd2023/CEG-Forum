@@ -99,10 +99,10 @@ class Post {
       communityName: map['communityName'] as String,
       communityAvatar: map['communityAvatar'] as String,
       upvotes: List<String>.from(
-        (map['upvotes'] as List<String>),
+        map['upvotes'],
       ),
       downvotes: List<String>.from(
-        (map['downvotes'] as List<String>),
+        map['downvotes'],
       ),
       commentCount: map['commentCount'] as int,
       userName: map['userName'] as String,
@@ -110,7 +110,7 @@ class Post {
       type: map['type'] as String,
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
       awards: List<String>.from(
-        (map['awards'] as List<String>),
+        map['awards'],
       ),
     );
   }

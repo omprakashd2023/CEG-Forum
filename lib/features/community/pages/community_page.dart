@@ -7,6 +7,7 @@ import '../controller/community_controller.dart';
 import '../../auth/controller/auth_controller.dart';
 
 //Widgets
+import '../../../core/widgets/post_tile.dart';
 import '../../../core/widgets/error_text.dart';
 import '../../../core/widgets/loader.dart';
 
@@ -32,7 +33,8 @@ class CommunityPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(userProvider);
+    final user = ref.watch(userProvider)!;
+    final isGuest = user.isAuthenticated == 'false' ? true : false;
     return Scaffold(
       body: ref.watch(getCommunityByNameProvider(name)).when(
             data: (community) => NestedScrollView(
@@ -76,35 +78,37 @@ class CommunityPage extends ConsumerWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              community.moderators.contains(user!.uid)
-                                  ? OutlinedButton(
-                                      onPressed: () =>
-                                          navigateToModTools(context),
-                                      style: ElevatedButton.styleFrom(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                          ),
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 25.0,
-                                          )),
-                                      child: const Text('Mod Tools'),
-                                    )
-                                  : OutlinedButton(
-                                      onPressed: () => joinCommunity(ref, community, context),
-                                      style: ElevatedButton.styleFrom(
-                                          shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                          ),
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 25.0,
-                                          )),
-                                      child: Text(
-                                          community.members.contains(user.uid)
-                                              ? 'Joined'
-                                              : 'Join'),
-                                    ),
+                              if (!isGuest)
+                                community.moderators.contains(user.uid)
+                                    ? OutlinedButton(
+                                        onPressed: () =>
+                                            navigateToModTools(context),
+                                        style: ElevatedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 25.0,
+                                            )),
+                                        child: const Text('Mod Tools'),
+                                      )
+                                    : OutlinedButton(
+                                        onPressed: () => joinCommunity(
+                                            ref, community, context),
+                                        style: ElevatedButton.styleFrom(
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(20.0),
+                                            ),
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 25.0,
+                                            )),
+                                        child: Text(
+                                            community.members.contains(user.uid)
+                                                ? 'Joined'
+                                                : 'Join'),
+                                      ),
                             ],
                           ),
                           Padding(
@@ -117,7 +121,24 @@ class CommunityPage extends ConsumerWidget {
                   ),
                 ];
               },
-              body: const Text('Displaying Posts'),
+              body: ref.watch(getCommunityPostsProvider(name)).when(
+                    data: (data) {
+                      return ListView.builder(
+                        itemCount: data.length,
+                        itemBuilder: (context, index) {
+                          final post = data[index];
+                          return PostTile(
+                            post: post,
+                          );
+                        },
+                      );
+                    },
+                    error: (error, stackTrace) {
+                      print(error.toString());
+                      return ErrorText(errorText: error.toString());
+                    },
+                    loading: () => const Loader(),
+                  ),
             ),
             error: (error, stackTrace) => ErrorText(
               errorText: error.toString(),

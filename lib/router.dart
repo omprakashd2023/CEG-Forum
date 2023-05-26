@@ -12,12 +12,13 @@ import './features/community/pages/add_moderator_page.dart';
 import './features/user_profile/pages/user_profile_page.dart';
 import './features/user_profile/pages/edit_profile_page.dart';
 import './features/posts/pages/add_post_type.dart';
+import './features/posts/pages/comment_page.dart';
 
 // loggedIn Routes
 final loggedInRoute = RouteMap(routes: {
   '/': (_) => const MaterialPage(child: HomePage()),
   '/create-community': (_) => const MaterialPage(child: CreateCommunityPage()),
-  '/r/:name': (route) => MaterialPage(
+  '/ceg/:name': (route) => MaterialPage(
         child: CommunityPage(
           name: route.pathParameters['name']!,
         ),
@@ -50,6 +51,11 @@ final loggedInRoute = RouteMap(routes: {
   '/add-post/:type': (route) => MaterialPage(
         child: AddPostTypePage(
           type: route.pathParameters['type']!,
+        ),
+      ),
+  '/post/:postId/comments': (route) => MaterialPage(
+        child: CommentPage(
+          postId: route.pathParameters['postId']!,
         ),
       ),
 });

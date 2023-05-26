@@ -16,7 +16,7 @@ class SearchCommunityDelegate extends SearchDelegate {
   });
 
   void navigateToCommunity(BuildContext context, String communityName) {
-    Routemaster.of(context).push('/r/$communityName');
+    Routemaster.of(context).push('/ceg/$communityName');
   }
 
   @override

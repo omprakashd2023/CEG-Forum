@@ -11,12 +11,14 @@ import '../../../core/widgets/error_text.dart';
 import '../../../core/widgets/loader.dart';
 
 //Controllers
+import '../../auth/controller/auth_controller.dart';
 import '../../community/controller/community_controller.dart';
 import '../controller/post_controller.dart';
 
 //Models
 import '../../../models/community_model.dart';
 
+//todo: Refactor the below code
 class AddPostTypePage extends ConsumerStatefulWidget {
   final String type;
   const AddPostTypePage({
@@ -90,6 +92,7 @@ class _AddPostTypePageState extends ConsumerState<AddPostTypePage> {
     final isTypeLink = widget.type == 'link';
     final isTypeText = widget.type == 'text';
     final isLoading = ref.watch(postControllerProvider);
+    final uid = ref.read(userProvider)!.uid;
     return isLoading
         ? const Center(
             child: Loader(),
@@ -206,7 +209,7 @@ class _AddPostTypePageState extends ConsumerState<AddPostTypePage> {
                     alignment: Alignment.topLeft,
                     child: Text('Select Community'),
                   ),
-                  ref.watch(userCommunityProvider).when(
+                  ref.watch(userCommunityProvider(uid)).when(
                         data: (data) {
                           communities = data;
                           if (data.isEmpty) {
@@ -224,7 +227,7 @@ class _AddPostTypePageState extends ConsumerState<AddPostTypePage> {
                                 .toList(),
                             onChanged: (value) {
                               setState(() {
-                                selectedCommunity = value;
+                                selectedCommunity = value as Community;
                               });
                             },
                           );

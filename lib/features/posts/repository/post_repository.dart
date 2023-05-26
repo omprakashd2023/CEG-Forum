@@ -189,7 +189,7 @@ class PostRepository {
         }),
       );
     } on FirebaseException catch (err) {
-      throw err.message!;Im
+      throw err.message!;
     } catch (err) {
       return left(
         Failure(

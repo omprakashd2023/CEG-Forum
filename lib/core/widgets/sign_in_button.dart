@@ -16,32 +16,21 @@ class SignInButton extends ConsumerWidget {
   });
 
   void signInWithGoogle(BuildContext context, WidgetRef ref) {
-    ref
-        .read(authControllerProvider.notifier)
-        .signInWithGoogle(context);
+    ref.read(authControllerProvider.notifier).signInWithGoogle(context);
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.all(18.0),
-      child: ElevatedButton.icon(
-        onPressed: () => signInWithGoogle(context, ref),
-        icon: Image.asset(
-          Constants.googlePath,
-          width: 35,
-        ),
-        label: const Text(
-          'Sign in with Google',
-          style: TextStyle(
-            fontSize: 18,
-          ),
-        ),
-        style: ElevatedButton.styleFrom(
+      child: InkWell(
+        onTap: () => signInWithGoogle(context, ref),
+        child: CircleAvatar(
           backgroundColor: Colours.greyColor,
-          minimumSize: const Size(double.infinity, 50),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+          radius: 25,
+          child: Image.asset(
+            Constants.googlePath,
+            width: 35,
           ),
         ),
       ),

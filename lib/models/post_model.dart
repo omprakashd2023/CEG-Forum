@@ -1,16 +1,21 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
+
 class Post {
   final String id;
   final String title;
   final String? description;
   final String? link;
   final String? image;
-  final String communityName;
-  final String communityAvatar;
+  final String? communityName;
+  final String? communityAvatar;
   final List<String> upvotes;
   final List<String> downvotes;
   final int commentCount;
   final String userName;
   final String userId;
+  final String userAvatar;
   final String type;
   final DateTime createdAt;
   final List<String> awards;
@@ -27,6 +32,7 @@ class Post {
     required this.commentCount,
     required this.userName,
     required this.userId,
+    required this.userAvatar,
     required this.type,
     required this.createdAt,
     required this.awards,
@@ -45,6 +51,7 @@ class Post {
     int? commentCount,
     String? userName,
     String? userId,
+    String? userAvatar,
     String? type,
     DateTime? createdAt,
     List<String>? awards,
@@ -62,6 +69,7 @@ class Post {
       commentCount: commentCount ?? this.commentCount,
       userName: userName ?? this.userName,
       userId: userId ?? this.userId,
+      userAvatar: userAvatar ?? this.userAvatar,
       type: type ?? this.type,
       createdAt: createdAt ?? this.createdAt,
       awards: awards ?? this.awards,
@@ -82,6 +90,7 @@ class Post {
       'commentCount': commentCount,
       'userName': userName,
       'userId': userId,
+      'userAvatar': userAvatar,
       'type': type,
       'createdAt': createdAt.millisecondsSinceEpoch,
       'awards': awards,
@@ -96,22 +105,20 @@ class Post {
           map['description'] != null ? map['description'] as String : null,
       link: map['link'] != null ? map['link'] as String : null,
       image: map['image'] != null ? map['image'] as String : null,
-      communityName: map['communityName'] as String,
-      communityAvatar: map['communityAvatar'] as String,
-      upvotes: List<String>.from(
-        map['upvotes'],
-      ),
-      downvotes: List<String>.from(
-        map['downvotes'],
-      ),
+      communityName:
+          map['communityName'] != null ? map['communityName'] as String : null,
+      communityAvatar: map['communityAvatar'] != null
+          ? map['communityAvatar'] as String
+          : null,
+      upvotes: List<String>.from(map['upvotes']),
+      downvotes: List<String>.from(map['downvotes']),
       commentCount: map['commentCount'] as int,
       userName: map['userName'] as String,
       userId: map['userId'] as String,
+      userAvatar: map['userAvatar'] as String,
       type: map['type'] as String,
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
-      awards: List<String>.from(
-        map['awards'],
-      ),
+      awards: List<String>.from(map['awards']),
     );
   }
 }

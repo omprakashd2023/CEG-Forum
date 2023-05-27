@@ -12,14 +12,15 @@ import '../controller/auth_controller.dart';
 import '../../../core/widgets/sign_in_button.dart';
 import '../../../core/widgets/loader.dart';
 
-class LoginPage extends ConsumerStatefulWidget {
-  const LoginPage({super.key});
+class SignUpPage extends ConsumerStatefulWidget {
+  const SignUpPage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _LoginPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends ConsumerState<LoginPage> {
+class _SignUpPageState extends ConsumerState<SignUpPage> {
+  final TextEditingController userNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
@@ -28,6 +29,51 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   bool isEmailValid = true;
   bool isPasswordValid = true;
   bool isConfirmPasswordValid = true;
+  bool isUserNameValid = true;
+  String validationUserNameMessage = 'Please enter a username';
+  String passwordErrorText = '';
+
+  // Function to validate username
+  void validateUserName(String value) async {
+    final RegExp usernameRegex = RegExp(r'^[a-zA-Z0-9_]{8,}$');
+
+    setState(() {
+      isUserNameValid = value.isNotEmpty && usernameRegex.hasMatch(value);
+      validationUserNameMessage = '';
+    });
+    if (isUserNameValid) {
+      if (value.length <= 8) {
+        isUserNameValid = false;
+        setState(() {
+          validationUserNameMessage =
+              'Username must be greater than 8 characters';
+        });
+      } else if (RegExp(r'[!@#\$%\^&\*]').hasMatch(value)) {
+        isUserNameValid = false;
+        setState(() {
+          validationUserNameMessage =
+              'Username must not contain special characters';
+        });
+      } else {
+        // Check if the username already exists
+        bool usernameExists = await ref
+            .watch(authControllerProvider.notifier)
+            .checkUsernameExists(value);
+
+        if (usernameExists) {
+          isUserNameValid = false;
+          setState(() {
+            validationUserNameMessage = 'Username already exists';
+          });
+        }
+      }
+    } else {
+      setState(() {
+        validationUserNameMessage =
+            'Username must be greater than 8 characters and must not contain special characters';
+      });
+    }
+  }
 
   // Function to validate email
   void validateEmail(String value) {
@@ -41,14 +87,68 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
   // Function to validate password
   void validatePassword(String value) {
+    bool hasUppercase = false;
+    bool hasLowercase = false;
+    bool hasDigit = false;
+    bool hasSpecialChar = false;
+    bool isLengthValid = false;
+
+    if (value.contains(RegExp(r'[A-Z]'))) {
+      hasUppercase = true;
+    }
+
+    if (value.contains(RegExp(r'[a-z]'))) {
+      hasLowercase = true;
+    }
+
+    if (value.contains(RegExp(r'[0-9]'))) {
+      hasDigit = true;
+    }
+
+    if (value.contains(RegExp(r'[!@#\$%\^&\*]'))) {
+      hasSpecialChar = true;
+    }
+
+    if (value.length >= 8) {
+      isLengthValid = true;
+    }
+
     setState(() {
-      isPasswordValid = value.isNotEmpty;
+      isPasswordValid = hasUppercase &&
+          hasLowercase &&
+          hasDigit &&
+          hasSpecialChar &&
+          isLengthValid;
+
+      if (!hasUppercase) {
+        passwordErrorText =
+            'Password must contain at least one uppercase letter';
+      } else if (!hasLowercase) {
+        passwordErrorText =
+            'Password must contain at least one lowercase letter';
+      } else if (!hasDigit) {
+        passwordErrorText = 'Password must contain at least one digit';
+      } else if (!hasSpecialChar) {
+        passwordErrorText =
+            'Password must contain at least one special character';
+      } else if (!isLengthValid) {
+        passwordErrorText = 'Password must be at least 8 characters long';
+      } else {
+        passwordErrorText = '';
+      }
     });
   }
 
-  void navigateToSignUpPage() {
-    print('Navigating to sign up page');
-    Routemaster.of(context).push('/sign-up');
+  // Function to validate confirm password
+  void validateConfirmPassword(String value) {
+    setState(() {
+      isConfirmPasswordValid =
+          value.isNotEmpty && value == passwordController.text;
+    });
+  }
+
+  void navigateToLoginPage() {
+    Routemaster.of(context).push('/');
   }
 
   @override
@@ -101,26 +201,39 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     ),
                   ),
                   const SizedBox(
-                    height: 30,
+                    height: 10.0,
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Image.asset(
                       Constants.loginEmotePath,
-                      height: 150,
+                      height: 100,
                       fit: BoxFit.cover,
                     ),
                   ),
                   const SizedBox(
-                    height: 30,
+                    height: 20,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Column(
                       children: [
                         TextField(
-                          keyboardType: TextInputType.emailAddress,
+                          controller: userNameController,
+                          decoration: InputDecoration(
+                            filled: true,
+                            labelText: 'Username',
+                            errorMaxLines: 2,
+                            errorText: isUserNameValid
+                                ? null
+                                : validationUserNameMessage,
+                          ),
+                          onChanged: validateUserName,
+                        ),
+                        const SizedBox(height: 16.0),
+                        TextField(
                           controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
                           decoration: InputDecoration(
                             filled: true,
                             labelText: 'Email',
@@ -137,11 +250,23 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           decoration: InputDecoration(
                             filled: true,
                             labelText: 'Password',
-                            errorText: isPasswordValid
-                                ? null
-                                : 'Please enter a password',
+                            errorText:
+                                isPasswordValid ? null : passwordErrorText,
                           ),
                           onChanged: validatePassword,
+                        ),
+                        const SizedBox(height: 16.0),
+                        TextField(
+                          controller: confirmPasswordController,
+                          obscureText: true,
+                          decoration: InputDecoration(
+                            filled: true,
+                            labelText: 'Confirm Password',
+                            errorText: isConfirmPasswordValid
+                                ? null
+                                : 'Passwords do not match',
+                          ),
+                          onChanged: validateConfirmPassword,
                         ),
                         const SizedBox(height: 32.0),
                         ElevatedButton(
@@ -154,7 +279,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                               // ...
                             }
                           },
-                          child: const Text('Sign In'),
+                          child: const Text('Sign Up'),
                         ),
                       ],
                     ),
@@ -162,10 +287,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('Don\'t have an account?'),
+                      const Text('Already have an account?'),
                       TextButton(
-                        onPressed: navigateToSignUpPage,
-                        child: const Text('Sign Up'),
+                        onPressed: navigateToLoginPage,
+                        child: const Text('Sign In'),
                       ),
                     ],
                   ),

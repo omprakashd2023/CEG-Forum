@@ -9,7 +9,6 @@ import '../widgets/comment_tile.dart';
 
 //Controllers
 import '../controller/post_controller.dart';
-import '../../auth/controller/auth_controller.dart';
 
 //Models
 import '../../../models/post_model.dart';

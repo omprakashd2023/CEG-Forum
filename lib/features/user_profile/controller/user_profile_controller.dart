@@ -38,6 +38,10 @@ final getUserPostsProvider = StreamProvider.family((ref, String uid) {
   return ref.read(userProfileControllerProvider.notifier).getUserPosts(uid);
 });
 
+final searchUsersProvider = StreamProvider.family((ref, String query) {
+  return ref.watch(userProfileControllerProvider.notifier).searchUsers(query);
+});
+
 class UserProfileController extends StateNotifier<bool> {
   final UserProfileRepository _userProfileRepository;
   final Ref _ref;
@@ -89,6 +93,10 @@ class UserProfileController extends StateNotifier<bool> {
 
   Stream<List<Post>> getUserPosts(String uid) {
     return _userProfileRepository.getUserPosts(uid);
+  }
+
+  Stream<List<UserModel>> searchUsers(String query) {
+    return _userProfileRepository.searchUsers(query);
   }
 
   void updateUserKarma(UserKarma userKarma, BuildContext context) async {

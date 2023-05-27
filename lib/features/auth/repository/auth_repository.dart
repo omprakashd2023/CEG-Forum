@@ -1,3 +1,4 @@
+import 'dart:core';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
@@ -27,6 +28,13 @@ final authRepositoryProvider = Provider(
     firestore: ref.read(firestoreProvider),
   ),
 );
+
+String generateUsername(String name) {
+  final RegExp usernameRegExp = RegExp(r'[^a-zA-Z0-9_]+');
+  final String sanitizedName =
+      name.toLowerCase().replaceAll(usernameRegExp, '_');
+  return sanitizedName;
+}
 
 class AuthRepository {
   final FirebaseAuth _auth;
@@ -59,8 +67,11 @@ class AuthRepository {
           await _auth.signInWithCredential(credential);
       UserModel userModel;
       if (userCredential.additionalUserInfo!.isNewUser) {
+        final String name = generateUsername(
+          userCredential.user!.displayName!,
+        );
         userModel = UserModel(
-          name: userCredential.user!.displayName!,
+          name: name,
           email: userCredential.user!.email!,
           avatar: userCredential.user!.photoURL ?? Constants.avatarDefault,
           banner: Constants.bannerDefault,
@@ -103,6 +114,11 @@ class AuthRepository {
             snapshot.data() as Map<String, dynamic>,
           ),
         );
+  }
+
+  Future<bool> checkUsernameExists(String username) async {
+    final snapshot = await _users.where('name', isEqualTo: username).get();
+    return snapshot.docs.isNotEmpty;
   }
 
   void logout() async {

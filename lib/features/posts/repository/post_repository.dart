@@ -18,7 +18,6 @@ import '../../../core/providers/firebase_providers.dart';
 import '../../../models/community_model.dart';
 import '../../../models/post_model.dart';
 import '../../../models/comment_model.dart';
-import '../../../models/user_model.dart';
 
 final postRepositoryProvider = Provider((ref) {
   return PostRepository(
@@ -72,7 +71,7 @@ class PostRepository {
         );
   }
 
-  Stream<List<Post>> fetchPostsForGuest() {
+  Stream<List<Post>> fetchLatestPosts() {
     return _posts.orderBy('createdAt', descending: true).snapshots().map(
           (snapshot) => snapshot.docs
               .map(
@@ -140,6 +139,28 @@ class PostRepository {
             snapshot.data() as Map<String, dynamic>,
           ),
         );
+  }
+
+  Stream<List<Post>> searchPosts(String query) {
+    return _posts
+        .where(
+          'title',
+          isGreaterThanOrEqualTo: query,
+          isLessThan: '${query}z',
+        )
+        .snapshots()
+        .map(
+      (snapshot) {
+        List<Post> posts = [];
+        for (var doc in snapshot.docs) {
+          var postData = doc.data() as Map<String, dynamic>;
+          posts.add(
+            Post.fromMap(postData),
+          );
+        }
+        return posts;
+      },
+    );
   }
 
   FutureVoid addComment(Comment comment) async {

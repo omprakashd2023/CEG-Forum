@@ -56,7 +56,7 @@ class _MyAppState extends ConsumerState<MyApp> {
   Widget build(BuildContext context) {
     return ref.watch(authStateChangeProvider).when(
           data: (data) => MaterialApp.router(
-            title: 'CEG Forum',
+            title: 'CEG Hub',
             theme: ref.watch(themeNotifierProvider),
             debugShowCheckedModeBanner: false,
             routerDelegate: RoutemasterDelegate(

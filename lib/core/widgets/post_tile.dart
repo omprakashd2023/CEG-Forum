@@ -57,12 +57,37 @@ class PostTile extends ConsumerWidget {
     Routemaster.of(context).push('/post/${post.id}/comments');
   }
 
+  String timeAgoSinceDate(Duration difference, BuildContext context) {
+    if (difference.inDays >= 365) {
+      final years = (difference.inDays / 365).floor();
+      return years == 1 ? '1 year ago' : '$years years ago';
+    } else if (difference.inDays >= 30) {
+      final months = (difference.inDays / 30).floor();
+      return months == 1 ? '1 month ago' : '$months months ago';
+    } else if (difference.inDays >= 7) {
+      final weeks = (difference.inDays / 7).floor();
+      return weeks == 1 ? '1 week ago' : '$weeks weeks ago';
+    } else if (difference.inDays > 0) {
+      return '${difference.inDays} days ago';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours} hours ago';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes} minutes ago';
+    } else {
+      return 'just now';
+    }
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isTypeImage = post.type == 'image';
     final isTypeLink = post.type == 'link';
     final isTypeText = post.type == 'text';
     final user = ref.watch(userProvider)!;
+    final now = DateTime.now();
+    final createdAtDateTime = post.createdAt;
+    final difference = now.difference(createdAtDateTime);
+    final timeAgo = timeAgoSinceDate(difference, context);
     return Column(
       children: [
         Container(
@@ -92,9 +117,14 @@ class PostTile extends ConsumerWidget {
                                   GestureDetector(
                                     onTap: () => navigateToCommunity(context),
                                     child: CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                        post.communityAvatar,
-                                      ),
+                                      backgroundImage:
+                                          post.communityAvatar != null
+                                              ? NetworkImage(
+                                                  post.communityAvatar!,
+                                                )
+                                              : NetworkImage(
+                                                  post.userAvatar,
+                                                ),
                                       radius: 16.0,
                                     ),
                                   ),
@@ -104,22 +134,60 @@ class PostTile extends ConsumerWidget {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(
-                                          'ceg/${post.communityName}',
-                                          style: const TextStyle(
-                                            fontSize: 16.0,
-                                            fontWeight: FontWeight.bold,
+                                        if (post.communityName != null) ...[
+                                          GestureDetector(
+                                            onTap: () =>
+                                                navigateToCommunity(context),
+                                            child: Text(
+                                              'ceg/${post.communityName}',
+                                              style: const TextStyle(
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
                                           ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: () => navigateToUser(context),
-                                          child: Text(
-                                            'u/${post.userName}',
+                                          Row(
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () =>
+                                                    navigateToUser(context),
+                                                child: Text(
+                                                  'u/${post.userName}',
+                                                  style: const TextStyle(
+                                                    fontSize: 12.0,
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(
+                                                width: 10.0,
+                                              ),
+                                              Text(
+                                                timeAgo,
+                                                style: const TextStyle(
+                                                  fontSize: 12.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ] else ...[
+                                          GestureDetector(
+                                            onTap: () =>
+                                                navigateToUser(context),
+                                            child: Text(
+                                              'u/${post.userName}',
+                                              style: const TextStyle(
+                                                fontSize: 16.0,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            timeAgo,
                                             style: const TextStyle(
                                               fontSize: 12.0,
                                             ),
                                           ),
-                                        ),
+                                        ]
                                       ],
                                     ),
                                   ),
@@ -255,27 +323,28 @@ class PostTile extends ConsumerWidget {
                                   //todo: Add Share Button
                                 ],
                               ),
-                              ref
-                                  .watch(getCommunityByNameProvider(
-                                      post.communityName))
-                                  .when(
-                                    data: (community) {
-                                      if (community.moderators
-                                          .contains(user.uid)) {
-                                        return IconButton(
-                                          onPressed: () =>
-                                              deletePost(ref, context),
-                                          icon: const Icon(
-                                              Icons.admin_panel_settings),
-                                        );
-                                      }
-                                      return const SizedBox();
-                                    },
-                                    error: (error, stackTrace) => ErrorText(
-                                      errorText: error.toString(),
+                              if (post.communityName != null)
+                                ref
+                                    .watch(getCommunityByNameProvider(
+                                        post.communityName!))
+                                    .when(
+                                      data: (community) {
+                                        if (community.moderators
+                                            .contains(user.uid)) {
+                                          return IconButton(
+                                            onPressed: () =>
+                                                deletePost(ref, context),
+                                            icon: const Icon(
+                                                Icons.admin_panel_settings),
+                                          );
+                                        }
+                                        return const SizedBox();
+                                      },
+                                      error: (error, stackTrace) => ErrorText(
+                                        errorText: error.toString(),
+                                      ),
+                                      loading: () => const Loader(),
                                     ),
-                                    loading: () => const Loader(),
-                                  ),
                               IconButton(
                                 onPressed: () {
                                   showDialog(

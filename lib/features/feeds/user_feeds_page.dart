@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 //Widgets
-import '../../../core/widgets/post_tile.dart';
+import '../../core/widgets/post_tile.dart';
 
 //Widgets
-import '../../../core/widgets/error_text.dart';
-import '../../../core/widgets/loader.dart';
+import '../../core/widgets/error_text.dart';
+import '../../core/widgets/loader.dart';
 
 //Controller
-import '../../auth/controller/auth_controller.dart';
-import '../../posts/controller/post_controller.dart';
-import '../../community/controller/community_controller.dart';
+import '../auth/controller/auth_controller.dart';
+import '../posts/controller/post_controller.dart';
+import '../community/controller/community_controller.dart';
 
-class FeedsPage extends ConsumerWidget {
-  const FeedsPage({super.key});
+class UserFeedsPage extends ConsumerWidget {
+  const UserFeedsPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

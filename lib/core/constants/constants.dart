@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 //Pages
 import '../../features/posts/pages/add_posts_page.dart';
-import '../../features/feeds/pages/feeds_page.dart';
+import '../../features/feeds/feeds_page.dart';
+import '../../features/feeds/user_feeds_page.dart';
 
 class Constants {
   static const logoPath = 'assets/images/logo.png';
@@ -15,6 +16,7 @@ class Constants {
 
   static const tabWidgets = [
     FeedsPage(),
+    UserFeedsPage(),
     AddPostsPage(),
   ];
   static const IconData up =

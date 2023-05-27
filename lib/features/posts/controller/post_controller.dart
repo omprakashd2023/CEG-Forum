@@ -42,9 +42,9 @@ final userPostProvider =
   return postController.fetchUserPosts(communities);
 });
 
-final getPostsForGuestProvider = StreamProvider((ref) {
+final getLatestPostsProvider = StreamProvider((ref) {
   final postController = ref.watch(postControllerProvider.notifier);
-  return postController.fetchPostsForGuest();
+  return postController.fetchLatestPosts();
 });
 
 final getPostByIdProvider = StreamProvider.family((ref, String postId) {
@@ -55,6 +55,10 @@ final getPostByIdProvider = StreamProvider.family((ref, String postId) {
 final getPostCommentsProvider = StreamProvider.family((ref, String postId) {
   final postController = ref.watch(postControllerProvider.notifier);
   return postController.fetchPostComments(postId);
+});
+
+final getSearchPostsProvider = StreamProvider.family((ref, String query) {
+  return ref.watch(postControllerProvider.notifier).searchPosts(query);
 });
 
 class PostController extends StateNotifier<bool> {
@@ -74,7 +78,7 @@ class PostController extends StateNotifier<bool> {
     required BuildContext context,
     required String title,
     required String description,
-    required Community community,
+    required Community? community,
   }) async {
     state = true;
     String postId = const Uuid().v1();
@@ -82,13 +86,14 @@ class PostController extends StateNotifier<bool> {
     final Post post = Post(
       id: postId,
       title: title,
-      communityName: community.name,
-      communityAvatar: community.avatar,
+      communityName: community?.name,
+      communityAvatar: community?.avatar,
       upvotes: [],
       downvotes: [],
       commentCount: 0,
       userName: user.name,
       userId: user.uid,
+      userAvatar: user.avatar,
       type: 'text',
       createdAt: DateTime.now(),
       awards: [],
@@ -110,7 +115,7 @@ class PostController extends StateNotifier<bool> {
     required BuildContext context,
     required String title,
     required String link,
-    required Community community,
+    required Community? community,
   }) async {
     state = true;
     String postId = const Uuid().v1();
@@ -118,12 +123,13 @@ class PostController extends StateNotifier<bool> {
     final Post post = Post(
       id: postId,
       title: title,
-      communityName: community.name,
-      communityAvatar: community.avatar,
+      communityName: community?.name,
+      communityAvatar: community?.avatar,
       upvotes: [],
       downvotes: [],
       commentCount: 0,
       userName: user.name,
+      userAvatar: user.avatar,
       userId: user.uid,
       type: 'link',
       createdAt: DateTime.now(),
@@ -147,15 +153,18 @@ class PostController extends StateNotifier<bool> {
     required BuildContext context,
     required String title,
     required File? image,
-    required Community community,
+    required Community? community,
   }) async {
     state = true;
     String postId = const Uuid().v1();
     final user = _ref.read(userProvider)!;
+    final path = community != null
+        ? 'posts/community/${community.name}'
+        : 'posts/users/${user.uid}';
     final imageRes = await _storageRepository.storeFile(
       id: postId,
       file: image,
-      path: 'posts/${community.name}',
+      path: path,
     );
 
     imageRes.fold(
@@ -164,12 +173,13 @@ class PostController extends StateNotifier<bool> {
         final Post post = Post(
           id: postId,
           title: title,
-          communityName: community.name,
-          communityAvatar: community.avatar,
+          communityName: community?.name,
+          communityAvatar: community?.avatar,
           upvotes: [],
           downvotes: [],
           commentCount: 0,
           userName: user.name,
+          userAvatar: user.avatar,
           userId: user.uid,
           type: 'image',
           createdAt: DateTime.now(),
@@ -198,8 +208,8 @@ class PostController extends StateNotifier<bool> {
     return Stream.value([]);
   }
 
-  Stream<List<Post>> fetchPostsForGuest() {
-    return _postRepository.fetchPostsForGuest();
+  Stream<List<Post>> fetchLatestPosts() {
+    return _postRepository.fetchLatestPosts();
   }
 
   void deletePost(BuildContext context, Post post) async {
@@ -211,6 +221,10 @@ class PostController extends StateNotifier<bool> {
           );
       showSnackBar(context, 'Post deleted successfully');
     });
+  }
+
+  Stream<List<Post>> searchPosts(String query) {
+    return _postRepository.searchPosts(query);
   }
 
   void upvotePost(Post post) async {

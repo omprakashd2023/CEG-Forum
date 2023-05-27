@@ -61,6 +61,10 @@ class AuthController extends StateNotifier<bool> {
     );
   }
 
+  Future<bool> checkUsernameExists(String username) async {
+    return _authRepository.checkUsernameExists(username);
+  }
+
   void logout() async {
     _authRepository.logout();
   }

@@ -1,3 +1,4 @@
+import 'package:ceg_forum/features/home/widgets/user_profile_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -6,10 +7,9 @@ import '../../auth/controller/auth_controller.dart';
 
 //Widgets
 import '../widgets/community_list_drawer.dart';
-import '../widgets/user_profile_drawer.dart';
 
 //Delegates
-import '../delegates/search_community_delegate.dart';
+import '../delegates/search_delegate.dart';
 
 //Constants
 import '../../../core/constants/constants.dart';
@@ -34,7 +34,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   void showSearchDelegate(BuildContext context, WidgetRef ref) {
     showSearch(
       context: context,
-      delegate: SearchCommunityDelegate(
+      delegate: SearchDelegateWidget(
         ref: ref,
       ),
     );
@@ -75,13 +75,18 @@ class _HomePageState extends ConsumerState<HomePage> {
       ),
       body: Constants.tabWidgets[_page],
       drawer: const CommunityListDrawer(),
-      endDrawer: BottomNavigationBar(
+      endDrawer: const UserProfileDrawer(),
+      bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Theme.of(context).iconTheme.color,
         backgroundColor: Theme.of(context).colorScheme.background,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.podcasts),
+            label: 'Discover',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.add),

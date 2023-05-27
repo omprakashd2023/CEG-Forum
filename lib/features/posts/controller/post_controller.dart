@@ -240,6 +240,7 @@ class PostController extends StateNotifier<bool> {
       createdAt: DateTime.now(),
       postId: post.id,
       userName: user.name,
+      userId: user.uid,
       userAvatar: user.avatar,
     );
     final result = await _postRepository.addComment(comment);
@@ -274,7 +275,8 @@ class PostController extends StateNotifier<bool> {
           );
       _ref.read(userProvider.notifier).update(
         (state) {
-          state?.awards.remove(award);
+          state!.awards.remove(award);
+          print(state.awards);
           return state;
         },
       );

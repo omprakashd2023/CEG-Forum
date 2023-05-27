@@ -63,7 +63,6 @@ class PostTile extends ConsumerWidget {
     final isTypeLink = post.type == 'link';
     final isTypeText = post.type == 'text';
     final user = ref.watch(userProvider)!;
-    final isGuest = user.isAuthenticated == 'false' ? true : false;
     return Column(
       children: [
         Container(
@@ -205,8 +204,7 @@ class PostTile extends ConsumerWidget {
                               Row(
                                 children: [
                                   IconButton(
-                                    onPressed:
-                                        isGuest ? () {} : () => upvotePost(ref),
+                                    onPressed: () => upvotePost(ref),
                                     icon: Icon(
                                       Constants.up,
                                       size: 25.0,
@@ -222,9 +220,7 @@ class PostTile extends ConsumerWidget {
                                     ),
                                   ),
                                   IconButton(
-                                    onPressed: isGuest
-                                        ? () {}
-                                        : () => downvotePost(ref),
+                                    onPressed: () => downvotePost(ref),
                                     icon: Icon(
                                       Constants.down,
                                       size: 25.0,
@@ -280,47 +276,41 @@ class PostTile extends ConsumerWidget {
                                     ),
                                     loading: () => const Loader(),
                                   ),
-                              isGuest
-                                  ? const SizedBox()
-                                  : IconButton(
-                                      onPressed: () {
-                                        showDialog(
-                                          context: context,
-                                          builder: (context) => Dialog(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(20.0),
-                                              child: GridView.builder(
-                                                shrinkWrap: true,
-                                                gridDelegate:
-                                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                                        crossAxisCount: 4),
-                                                itemCount: user.awards.length,
-                                                itemBuilder: (context, index) {
-                                                  final award =
-                                                      user.awards[index];
-                                                  return GestureDetector(
-                                                    onTap: () => awardPost(
-                                                        ref, award, context),
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              10.0),
-                                                      child: Image.asset(
-                                                          Constants
-                                                              .awards[award]!),
-                                                    ),
-                                                  );
-                                                },
+                              IconButton(
+                                onPressed: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) => Dialog(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(20.0),
+                                        child: GridView.builder(
+                                          shrinkWrap: true,
+                                          gridDelegate:
+                                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                                  crossAxisCount: 4),
+                                          itemCount: user.awards.length,
+                                          itemBuilder: (context, index) {
+                                            final award = user.awards[index];
+                                            return GestureDetector(
+                                              onTap: () => awardPost(
+                                                  ref, award, context),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(10.0),
+                                                child: Image.asset(
+                                                    Constants.awards[award]!),
                                               ),
-                                            ),
-                                          ),
-                                        );
-                                      },
-                                      icon: const Icon(
-                                        Icons.card_giftcard,
+                                            );
+                                          },
+                                        ),
                                       ),
                                     ),
+                                  );
+                                },
+                                icon: const Icon(
+                                  Icons.card_giftcard,
+                                ),
+                              ),
                             ],
                           ),
                         ],

@@ -4,6 +4,7 @@ class Comment {
   final DateTime createdAt;
   final String postId;
   final String userName;
+  final String userId;
   final String userAvatar;
   Comment({
     required this.id,
@@ -11,6 +12,7 @@ class Comment {
     required this.createdAt,
     required this.postId,
     required this.userName,
+    required this.userId,
     required this.userAvatar,
   });
 
@@ -20,6 +22,7 @@ class Comment {
     DateTime? createdAt,
     String? postId,
     String? userName,
+    String? userId,
     String? userAvatar,
   }) {
     return Comment(
@@ -28,6 +31,7 @@ class Comment {
       createdAt: createdAt ?? this.createdAt,
       postId: postId ?? this.postId,
       userName: userName ?? this.userName,
+      userId: userId ?? this.userId,
       userAvatar: userAvatar ?? this.userAvatar,
     );
   }
@@ -39,6 +43,7 @@ class Comment {
       'createdAt': createdAt.millisecondsSinceEpoch,
       'postId': postId,
       'userName': userName,
+      'userId': userId,
       'userAvatar': userAvatar,
     };
   }
@@ -50,7 +55,9 @@ class Comment {
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] as int),
       postId: map['postId'] as String,
       userName: map['userName'] as String,
+      userId: map['userId'] as String,
       userAvatar: map['userAvatar'] as String,
     );
   }
+
 }

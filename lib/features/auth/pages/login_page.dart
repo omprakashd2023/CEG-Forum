@@ -14,10 +14,6 @@ import '../../../core/widgets/loader.dart';
 class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
 
-  void signInAsGuest(WidgetRef ref, BuildContext context) {
-    ref.read(authControllerProvider.notifier).signInAsGuest(context);
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = ref.watch(authControllerProvider);
@@ -30,9 +26,9 @@ class LoginPage extends ConsumerWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () => signInAsGuest(ref, context),
+            onPressed: () {},
             child: const Text(
-              'Skip',
+              'Welcome',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
               ),

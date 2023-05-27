@@ -11,16 +11,14 @@ import '../constants/constants.dart';
 import '../../theme/colours.dart';
 
 class SignInButton extends ConsumerWidget {
-  final bool isFromLogin;
   const SignInButton({
     super.key,
-    this.isFromLogin = true,
   });
 
   void signInWithGoogle(BuildContext context, WidgetRef ref) {
     ref
         .read(authControllerProvider.notifier)
-        .signInWithGoogle(context, isFromLogin);
+        .signInWithGoogle(context);
   }
 
   @override

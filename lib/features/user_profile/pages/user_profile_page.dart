@@ -26,6 +26,8 @@ class UserProfilePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final currentUser = ref.watch(userProvider)!;
+    final isCurrentUser = currentUser.uid == uid;
     return Scaffold(
       body: ref.watch(getUserDataProvider(uid)).when(
             data: (userData) => NestedScrollView(
@@ -54,22 +56,24 @@ class UserProfilePage extends ConsumerWidget {
                                 radius: 35.0,
                               ),
                             ),
-                            Container(
-                              alignment: Alignment.bottomLeft,
-                              padding: const EdgeInsets.all(20.0),
-                              child: OutlinedButton(
-                                onPressed: () =>
-                                    navigateToEditProfilePage(context),
-                                style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20.0),
-                                    ),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 25.0,
-                                    )),
-                                child: const Text('Edit Profile'),
+                            if (isCurrentUser)
+                              Container(
+                                alignment: Alignment.bottomLeft,
+                                padding: const EdgeInsets.all(20.0),
+                                child: OutlinedButton(
+                                  onPressed: () =>
+                                      navigateToEditProfilePage(context),
+                                  style: ElevatedButton.styleFrom(
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 25.0,
+                                      )),
+                                  child: const Text('Edit Profile'),
+                                ),
                               ),
-                            ),
                           ],
                         )
                       ],

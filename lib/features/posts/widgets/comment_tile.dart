@@ -10,9 +10,37 @@ class CommentTile extends ConsumerWidget {
     super.key,
     required this.comment,
   });
+  String timeAgoSinceDate(Duration difference, BuildContext context) {
+    if (difference.inDays >= 365) {
+      final years = (difference.inDays / 365).floor();
+      return years == 1 ? '1 year ago' : '$years years ago';
+    } else if (difference.inDays >= 30) {
+      final months = (difference.inDays / 30).floor();
+      return months == 1 ? '1 month ago' : '$months months ago';
+    } else if (difference.inDays >= 7) {
+      final weeks = (difference.inDays / 7).floor();
+      return weeks == 1 ? '1 week ago' : '$weeks weeks ago';
+    } else if (difference.inDays > 0) {
+      return '${difference.inDays} days ago';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours} hours ago';
+    } else if (difference.inMinutes > 0) {
+      return '${difference.inMinutes} minutes ago';
+    } else {
+      return 'just now';
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // final user = ref.watch(userProvider)!;
+    // final isCurrentUser = user.uid == comment.userId;
+    final now = DateTime.now();
+    final createdAtDateTime = comment.createdAt;
+    final difference = now.difference(createdAtDateTime);
+
+    final timeAgo = timeAgoSinceDate(difference, context);
+
     return Container(
       padding: const EdgeInsets.symmetric(
         vertical: 10.0,
@@ -41,13 +69,29 @@ class CommentTile extends ConsumerWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text(comment.comment),
+                      Row(
+                        children: [
+                          Text(comment.comment),
+                          const SizedBox(
+                            width: 8.0,
+                          ),
+                          Text(
+                            timeAgo,
+                            style: TextStyle(
+                              color:
+                                  Theme.of(context).textTheme.bodySmall!.color,
+                              fontSize: 12.0,
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),
               ),
             ],
           ),
+          //todo: Add Nested Comment Section
           Row(
             children: [
               IconButton(

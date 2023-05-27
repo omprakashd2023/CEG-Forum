@@ -18,6 +18,7 @@ import '../../../core/providers/firebase_providers.dart';
 import '../../../models/community_model.dart';
 import '../../../models/post_model.dart';
 import '../../../models/comment_model.dart';
+import '../../../models/user_model.dart';
 
 final postRepositoryProvider = Provider((ref) {
   return PostRepository(
@@ -179,9 +180,8 @@ class PostRepository {
       _posts.doc(post.id).update({
         'awards': FieldValue.arrayUnion([award]),
       });
-      print(senderId);
       _users.doc(senderId).update({
-        'awards': FieldValue.arrayRemove([award]),
+        'awards': award,
       });
       return right(
         _users.doc(post.userId).update({

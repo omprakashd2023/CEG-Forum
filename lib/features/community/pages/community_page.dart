@@ -34,7 +34,6 @@ class CommunityPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(userProvider)!;
-    final isGuest = user.isAuthenticated == 'false' ? true : false;
     return Scaffold(
       body: ref.watch(getCommunityByNameProvider(name)).when(
             data: (community) => NestedScrollView(
@@ -78,7 +77,6 @@ class CommunityPage extends ConsumerWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              if (!isGuest)
                                 community.moderators.contains(user.uid)
                                     ? OutlinedButton(
                                         onPressed: () =>

@@ -47,37 +47,114 @@ class _CommentPageState extends ConsumerState<CommentPage> {
 
   @override
   Widget build(BuildContext context) {
-    final user = ref.watch(userProvider)!;
-    final isGuest = user.isAuthenticated == 'false' ? true : false;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Comments'),
       ),
       body: ref.watch(getPostByIdProvider(widget.postId)).when(
             data: (post) {
-              return Column(
+              return SingleChildScrollView(
+                child: Column(
+                  children: [
+                    PostTile(post: post),
+                    const Divider(),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            onSubmitted: (_) => addComment(post),
+                            controller: commentController,
+                            keyboardType: TextInputType.url,
+                            decoration: const InputDecoration(
+                              filled: true,
+                              hintText: 'What are your thoughts?',
+                              border: InputBorder.none,
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
+                                  color: Colors.transparent,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(10.0),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          onPressed: () => addComment(post),
+                          icon: const Icon(Icons.send),
+                        ),
+                      ],
+                    ),
+                    const Divider(),
+                    ref.watch(getPostCommentsProvider(widget.postId)).when(
+                          data: (comments) {
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: comments.length,
+                              itemBuilder: (context, index) {
+                                final comment = comments[index];
+                                return CommentTile(
+                                  comment: comment,
+                                );
+                              },
+                            );
+                          },
+                          error: (error, stackTrace) {
+                            print(error);
+                            return ErrorText(errorText: error.toString());
+                          },
+                          loading: () => const Loader(),
+                        )
+                  ],
+                ),
+              );
+            },
+            error: (error, stackTrace) {
+              print(error.toString);
+              return ErrorText(errorText: error.toString());
+            },
+            loading: () => const Loader(),
+          ),
+    );
+  }
+}
+
+/*
+  Column(
                 children: [
                   PostTile(
                     post: post,
                   ),
-                  TextField(
-                    enabled: !isGuest,
-                    onSubmitted: (_) => addComment(post),
-                    controller: commentController,
-                    keyboardType: TextInputType.url,
-                    decoration: const InputDecoration(
-                      filled: true,
-                      hintText: 'What are your thoughts?',
-                      border: InputBorder.none,
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Colors.transparent,
-                        ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(10.0),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          onSubmitted: (_) => addComment(post),
+                          controller: commentController,
+                          keyboardType: TextInputType.url,
+                          decoration: const InputDecoration(
+                            filled: true,
+                            hintText: 'What are your thoughts?',
+                            border: InputBorder.none,
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Colors.transparent,
+                              ),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10.0),
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      IconButton(
+                          onPressed: () => addComment(post),
+                          icon: const Icon(Icons.send),
+                        ),
+                    ],
                   ),
                   ref.watch(getPostCommentsProvider(widget.postId)).when(
                         data: (comments) {
@@ -99,13 +176,5 @@ class _CommentPageState extends ConsumerState<CommentPage> {
                         loading: () => const Loader(),
                       )
                 ],
-              );
-            },
-            error: (error, stackTrace) => ErrorText(
-              errorText: error.toString(),
-            ),
-            loading: () => const Loader(),
-          ),
-    );
-  }
-}
+              )
+*/

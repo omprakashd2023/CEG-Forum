@@ -108,6 +108,65 @@ class AuthRepository {
     }
   }
 
+  FutureEither<UserModel> signUpWithEmail(
+      {String? username,
+      required String email,
+      required String password}) async {
+    UserModel userModel;
+    try {
+      if (username != null) {
+        final UserCredential userCredential =
+            await _auth.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        userModel = UserModel(
+          name: username,
+          email: userCredential.user!.email!,
+          avatar: Constants.avatarDefault,
+          banner: Constants.bannerDefault,
+          uid: userCredential.user!.uid,
+          isAuthenticated: 'false',
+          karma: 0,
+          awards: [
+            'awesomeAns',
+            'gold',
+            'platinum',
+            'helpful',
+            'plusone',
+            'rocket',
+            'thankyou',
+            'til',
+          ],
+        );
+        await _users.doc(userCredential.user!.uid).set(
+              userModel.toMap(),
+            );
+        await userCredential.user!.sendEmailVerification();
+        // Wait for the user to verify their email
+        await userCredential.user!.reload();
+        final updatedUser = _auth.currentUser;
+        if (updatedUser != null && updatedUser.emailVerified) {
+          userModel.isAuthenticated = 'true';
+        }
+      } else {
+        final UserCredential userCredential =
+            await _auth.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        userModel = await getUserData(userCredential.user!.uid).first;
+      }
+
+      return right(userModel);
+    } on FirebaseException catch (err) {
+      throw err.message.toString();
+    } catch (err) {
+      print(err);
+      return left(Failure(err.toString()));
+    }
+  }
+
   Stream<UserModel> getUserData(String uid) {
     return _users.doc(uid).snapshots().map(
           (snapshot) => UserModel.fromMap(

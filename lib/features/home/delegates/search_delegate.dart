@@ -203,26 +203,39 @@ class SearchDelegateWidget extends SearchDelegate {
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
-                                                Text(
-                                                  'ceg/${post.communityName}',
-                                                  style: const TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                                Row(
-                                                  children: [
-                                                    Text(
-                                                      'u/${post.userName}',
-                                                      style: TextStyle(
-                                                        color: Theme.of(context)
-                                                            .textTheme
-                                                            .bodySmall!
-                                                            .color,
-                                                        fontSize: 12.0,
-                                                      ),
+                                                if (post.communityName !=
+                                                    null) ...[
+                                                  Text(
+                                                    'ceg/${post.communityName}',
+                                                    style: const TextStyle(
+                                                      fontSize: 16.0,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        'u/${post.userName}',
+                                                        style: const TextStyle(
+                                                          fontSize: 12.0,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 10.0,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ] else ...[
+                                                  Text(
+                                                    'u/${post.userName}',
+                                                    style: const TextStyle(
+                                                      fontSize: 16.0,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ],
                                               ],
                                             ),
                                           ),

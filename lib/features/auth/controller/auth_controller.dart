@@ -61,6 +61,25 @@ class AuthController extends StateNotifier<bool> {
     );
   }
 
+  //SignIn with Email and Password Function
+  void signInWithEmail(BuildContext context, String? username, String email,
+      String password) async {
+    state = true;
+    final user = await _authRepository.signUpWithEmail(
+      email: email,
+      password: password,
+      username: username,
+    );
+    state = false;
+    user.fold((l) {
+      showSnackBar(context, l.message);
+      Routemaster.of(context).pop();
+    }, (userModel) {
+      _ref.read(userProvider.notifier).update((state) => userModel);
+      Routemaster.of(context).push('/');
+    });
+  }
+
   Future<bool> checkUsernameExists(String username) async {
     return _authRepository.checkUsernameExists(username);
   }

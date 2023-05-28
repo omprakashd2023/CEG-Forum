@@ -142,26 +142,21 @@ class PostRepository {
   }
 
   Stream<List<Post>> searchPosts(String query) {
-    return _posts
-        .where(
-          'title',
-          isGreaterThanOrEqualTo: query,
-          isLessThan: '${query}z',
-        )
-        .snapshots()
-        .map(
-      (snapshot) {
-        List<Post> posts = [];
-        for (var doc in snapshot.docs) {
-          var postData = doc.data() as Map<String, dynamic>;
-          posts.add(
-            Post.fromMap(postData),
-          );
+    final lowercaseQuery = query.toLowerCase();
+
+    return _posts.snapshots().map((snapshot) {
+      List<Post> posts = [];
+      for (var doc in snapshot.docs) {
+        var postData = doc.data() as Map<String, dynamic>;
+        var post = Post.fromMap(postData);
+        if (post.title.toLowerCase().contains(lowercaseQuery)) {
+          posts.add(post);
         }
-        return posts;
-      },
-    );
+      }
+      return posts;
+    });
   }
+
 
   FutureVoid addComment(Comment comment) async {
     try {

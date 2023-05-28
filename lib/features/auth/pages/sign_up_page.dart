@@ -151,6 +151,13 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
     Routemaster.of(context).push('/');
   }
 
+  void signInWithEmailAndPassword(
+      String username, String email, String password) {
+    ref
+        .read(authControllerProvider.notifier)
+        .signInWithEmail(context, username, email, password);
+  }
+
   @override
   Widget build(BuildContext context) {
     final isLoading = ref.watch(authControllerProvider);
@@ -271,12 +278,14 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                         const SizedBox(height: 32.0),
                         ElevatedButton(
                           onPressed: () {
-                            // Perform form submission
                             if (isEmailValid &&
                                 isPasswordValid &&
                                 isConfirmPasswordValid) {
-                              // Perform sign-up logic
-                              // ...
+                              signInWithEmailAndPassword(
+                                userNameController.text,
+                                emailController.text,
+                                passwordController.text,
+                              );
                             }
                           },
                           child: const Text('Sign Up'),

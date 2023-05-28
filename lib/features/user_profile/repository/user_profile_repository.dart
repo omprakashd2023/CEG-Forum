@@ -83,27 +83,17 @@ class UserProfileRepository {
   }
 
   Stream<List<UserModel>> searchUsers(String query) {
-    return _users
-        .where(
-          'name',
-          isGreaterThanOrEqualTo: query.isEmpty ? 0 : query,
-          isLessThan: query.isEmpty
-              ? null
-              : query.substring(0, query.length - 1) +
-                  String.fromCharCode(
-                    query.codeUnitAt(query.length - 1) + 1,
-                  ),
-        )
-        .snapshots()
-        .map(
+    final lowercaseQuery = query.toLowerCase();
+
+    return _users.snapshots().map(
       (snapshot) {
         List<UserModel> users = [];
         for (var doc in snapshot.docs) {
-          users.add(
-            UserModel.fromMap(
-              doc.data() as Map<String, dynamic>,
-            ),
-          );
+          var userData = doc.data() as Map<String, dynamic>;
+          var user = UserModel.fromMap(userData);
+          if (user.name.toLowerCase().contains(lowercaseQuery)) {
+            users.add(user);
+          }
         }
         return users;
       },

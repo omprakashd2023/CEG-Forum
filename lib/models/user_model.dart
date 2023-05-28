@@ -4,7 +4,7 @@ class UserModel {
   final String avatar;
   final String banner;
   final String uid;
-  final String isAuthenticated;
+  String isAuthenticated;
   final int karma;
   final List<String> awards;
   UserModel({

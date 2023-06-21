@@ -59,5 +59,4 @@ class Comment {
       userAvatar: map['userAvatar'] as String,
     );
   }
-
 }

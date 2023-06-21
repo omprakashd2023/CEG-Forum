@@ -23,6 +23,7 @@ class HomePage extends ConsumerStatefulWidget {
 
 class _HomePageState extends ConsumerState<HomePage> {
   int _page = 0;
+  String pageName = 'Home';
   void displayDrawer(BuildContext context) {
     Scaffold.of(context).openDrawer();
   }
@@ -43,6 +44,13 @@ class _HomePageState extends ConsumerState<HomePage> {
   void onPageChanged(int page) {
     setState(() {
       _page = page;
+      if (_page == 0) {
+        pageName = 'Home';
+      } else if (_page == 1) {
+        pageName = 'Discover';
+      } else {
+        pageName = 'Add Post';
+      }
     });
   }
 
@@ -51,7 +59,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     final user = ref.watch(userProvider)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home'),
+        title: Text(pageName),
         leading: Builder(builder: (context) {
           return IconButton(
             icon: const Icon(Icons.menu),

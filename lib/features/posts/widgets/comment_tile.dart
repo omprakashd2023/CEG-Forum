@@ -4,12 +4,29 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 //Models
 import '../../../models/comment_model.dart';
 
-class CommentTile extends ConsumerWidget {
+class CommentTile extends ConsumerStatefulWidget {
   final Comment comment;
   const CommentTile({
     super.key,
     required this.comment,
   });
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _CommentTileState();
+}
+
+class _CommentTileState extends ConsumerState<CommentTile> {
+  bool showReplyTextField = false;
+  final TextEditingController replyController = TextEditingController();
+
+  void toggleReplyTextField() {
+    setState(() {
+      showReplyTextField = !showReplyTextField;
+    });
+  }
+
+  void addReply() {}
+
   String timeAgoSinceDate(Duration difference, BuildContext context) {
     if (difference.inDays >= 365) {
       final years = (difference.inDays / 365).floor();
@@ -32,11 +49,11 @@ class CommentTile extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     // final user = ref.watch(userProvider)!;
     // final isCurrentUser = user.uid == comment.userId;
     final now = DateTime.now();
-    final createdAtDateTime = comment.createdAt;
+    final createdAtDateTime = widget.comment.createdAt;
     final difference = now.difference(createdAtDateTime);
 
     final timeAgo = timeAgoSinceDate(difference, context);
@@ -52,7 +69,7 @@ class CommentTile extends ConsumerWidget {
           Row(
             children: [
               CircleAvatar(
-                backgroundImage: NetworkImage(comment.userAvatar),
+                backgroundImage: NetworkImage(widget.comment.userAvatar),
                 radius: 18.0,
               ),
               Expanded(
@@ -64,14 +81,14 @@ class CommentTile extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'u/${comment.userName}',
+                        'u/${widget.comment.userName}',
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Row(
                         children: [
-                          Text(comment.comment),
+                          Text(widget.comment.comment),
                           const SizedBox(
                             width: 8.0,
                           ),
@@ -95,12 +112,43 @@ class CommentTile extends ConsumerWidget {
           Row(
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: toggleReplyTextField,
                 icon: const Icon(Icons.reply),
               ),
               const Text('Reply'),
             ],
           ),
+          if (showReplyTextField)
+            Padding(
+              padding: const EdgeInsets.only(left: 25.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: replyController,
+                      keyboardType: TextInputType.url,
+                      decoration: const InputDecoration(
+                        filled: true,
+                        hintText: 'Reply to this comment',
+                        border: InputBorder.none,
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.transparent,
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.0),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: addReply,
+                    icon: const Icon(Icons.send),
+                  ),
+                ],
+              ),
+            ),
         ],
       ),
     );

@@ -15,7 +15,6 @@ import '../../posts/controller/post_controller.dart';
 
 //Widgets
 import '../../../core/widgets/loader.dart';
-import '../../../core/widgets/error_text.dart';
 
 class SearchDelegateWidget extends SearchDelegate {
   final WidgetRef ref;
@@ -63,18 +62,19 @@ class SearchDelegateWidget extends SearchDelegate {
     final communitySuggestions = ref.watch(searchCommunityProvider(query));
     final postSuggestions = ref.watch(getSearchPostsProvider(query));
 
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          if (userSuggestions is AsyncData<List<UserModel>>) ...[
-            const ListTile(
-              title: Text('Users'),
-            ),
-            (userSuggestions.value.isEmpty && query != '')
-                ? const ListTile(
-                    title: Text('No matching users found'),
-                  )
-                : ListView.builder(
+    return userSuggestions is AsyncLoading ||
+            communitySuggestions is AsyncLoading
+        ? const Loader()
+        : SingleChildScrollView(
+            child: Column(
+              children: [
+                if (query.isNotEmpty &&
+                    userSuggestions is AsyncData<List<UserModel>> &&
+                    userSuggestions.value.isNotEmpty) ...[
+                  const ListTile(
+                    title: Text('Users'),
+                  ),
+                  ListView.builder(
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       final user = userSuggestions.value[index];
@@ -89,17 +89,15 @@ class SearchDelegateWidget extends SearchDelegate {
                     },
                     itemCount: userSuggestions.value.length,
                   ),
-            const Divider(),
-          ],
-          if (communitySuggestions is AsyncData<List<Community>>) ...[
-            const ListTile(
-              title: Text('Communities'),
-            ),
-            (communitySuggestions.value.isEmpty && query != '')
-                ? const ListTile(
-                    title: Text('No matching communities found'),
-                  )
-                : ListView.builder(
+                  const Divider(),
+                ],
+                if (query.isNotEmpty &&
+                    communitySuggestions is AsyncData<List<Community>> &&
+                    communitySuggestions.value.isNotEmpty) ...[
+                  const ListTile(
+                    title: Text('Communities'),
+                  ),
+                  ListView.builder(
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       final community = communitySuggestions.value[index];
@@ -115,17 +113,15 @@ class SearchDelegateWidget extends SearchDelegate {
                     },
                     itemCount: communitySuggestions.value.length,
                   ),
-            const Divider(),
-          ],
-          const ListTile(
-            title: Text('Posts'),
-          ),
-          if (query.isNotEmpty && postSuggestions is AsyncData<List<Post>>) ...[
-            (postSuggestions.value.isEmpty && query != '')
-                ? const ListTile(
-                    title: Text('No matching posts found'),
-                  )
-                : GridView.builder(
+                  const Divider(),
+                ],
+                if (query.isNotEmpty &&
+                    postSuggestions is AsyncData<List<Post>> &&
+                    postSuggestions.value.isNotEmpty) ...[
+                  const ListTile(
+                    title: Text('Posts'),
+                  ),
+                  GridView.builder(
                     shrinkWrap: true,
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
@@ -137,8 +133,7 @@ class SearchDelegateWidget extends SearchDelegate {
                       return GestureDetector(
                         onTap: () => navigateToPost(context, post.id),
                         child: SizedBox(
-                          height:
-                              200, // Adjust the height as per your requirement
+                          height: 200,
                           child: Card(
                             elevation: 2,
                             shape: RoundedRectangleBorder(
@@ -218,11 +213,11 @@ class SearchDelegateWidget extends SearchDelegate {
                                                       Text(
                                                         'u/${post.userName}',
                                                         style: const TextStyle(
-                                                          fontSize: 12.0,
+                                                          fontSize: 10.0,
                                                         ),
                                                       ),
                                                       const SizedBox(
-                                                        width: 10.0,
+                                                        width: 12.0,
                                                       ),
                                                     ],
                                                   ),
@@ -230,7 +225,7 @@ class SearchDelegateWidget extends SearchDelegate {
                                                   Text(
                                                     'u/${post.userName}',
                                                     style: const TextStyle(
-                                                      fontSize: 16.0,
+                                                      fontSize: 14.0,
                                                       fontWeight:
                                                           FontWeight.bold,
                                                     ),
@@ -252,18 +247,10 @@ class SearchDelegateWidget extends SearchDelegate {
                     },
                     itemCount: postSuggestions.value.length,
                   ),
-          ],
-          const Divider(),
-          if (userSuggestions is AsyncLoading ||
-              communitySuggestions is AsyncLoading)
-            const Loader(),
-          if (userSuggestions is AsyncError<List<UserModel>> ||
-              communitySuggestions is AsyncError<List<Community>>)
-            const ErrorText(
-              errorText: 'Error occurred while searching.',
+                  const Divider(),
+                ],
+              ],
             ),
-        ],
-      ),
-    );
+          );
   }
 }

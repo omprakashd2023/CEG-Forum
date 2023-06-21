@@ -157,10 +157,13 @@ class PostRepository {
     });
   }
 
-
   FutureVoid addComment(Comment comment) async {
     try {
-      await _comments.doc(comment.id).set(comment.toMap());
+      await _comments
+          .doc(comment.postId)
+          .collection('comments')
+          .doc(comment.id)
+          .set(comment.toMap());
       return right(_posts.doc(comment.postId).update({
         'commentCount': FieldValue.increment(1),
       }));
@@ -177,17 +180,20 @@ class PostRepository {
 
   Stream<List<Comment>> fetchPostComments(String postId) {
     return _comments
+        .doc(postId)
+        .collection('comments')
         .where('postId', isEqualTo: postId)
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map(
-          (snapshot) => snapshot.docs
-              .map(
-                (comment) => Comment.fromMap(
-                  comment.data() as Map<String, dynamic>,
-                ),
-              )
-              .toList(),
+          (snapshot) => snapshot.docs.map((comment) {
+            final res = Comment.fromMap(
+              comment.data(),
+            );
+            print('hello');
+            print(res.comment);
+            return res;
+          }).toList(),
         );
   }
 

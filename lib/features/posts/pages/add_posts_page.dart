@@ -11,26 +11,23 @@ class AddPostsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    double cardHeight = 120.0;
-    double cardWidth = 120.0;
-    double iconSize = 60.0;
+    double iconSize = 80.0;
+
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          GestureDetector(
-            onTap: () => navigateToAddPostTypePage(context, 'image'),
-            child: SizedBox(
-              height: cardHeight,
-              width: cardWidth,
+          Expanded(
+            child: GestureDetector(
+              onTap: () => navigateToAddPostTypePage(context, 'image'),
               child: Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 color: Theme.of(context).cardColor,
-                elevation: 16.0,
+                elevation: 4.0,
                 child: Center(
                   child: Icon(
                     Icons.image_outlined,
@@ -38,20 +35,17 @@ class AddPostsPage extends ConsumerWidget {
                   ),
                 ),
               ),
-              
             ),
           ),
-          GestureDetector(
-            onTap: () => navigateToAddPostTypePage(context, 'text'),
-            child: SizedBox(
-              height: cardHeight,
-              width: cardWidth,
+          Expanded(
+            child: GestureDetector(
+              onTap: () => navigateToAddPostTypePage(context, 'text'),
               child: Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 color: Theme.of(context).cardColor,
-                elevation: 16.0,
+                elevation: 4.0,
                 child: Center(
                   child: Icon(
                     Icons.font_download_outlined,
@@ -61,17 +55,15 @@ class AddPostsPage extends ConsumerWidget {
               ),
             ),
           ),
-          GestureDetector(
-            onTap: () => navigateToAddPostTypePage(context, 'link'),
-            child: SizedBox(
-              height: cardHeight,
-              width: cardWidth,
+          Expanded(
+            child: GestureDetector(
+              onTap: () => navigateToAddPostTypePage(context, 'link'),
               child: Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 color: Theme.of(context).cardColor,
-                elevation: 16.0,
+                elevation: 4.0,
                 child: Center(
                   child: Icon(
                     Icons.link_outlined,

@@ -75,6 +75,7 @@ class AuthRepository {
           email: userCredential.user!.email!,
           avatar: userCredential.user!.photoURL ?? Constants.avatarDefault,
           banner: Constants.bannerDefault,
+          description: '',
           uid: userCredential.user!.uid,
           isAuthenticated: 'true',
           karma: 0,
@@ -126,6 +127,7 @@ class AuthRepository {
           avatar: Constants.avatarDefault,
           banner: Constants.bannerDefault,
           uid: userCredential.user!.uid,
+          description: '',
           isAuthenticated: 'false',
           karma: 0,
           awards: [

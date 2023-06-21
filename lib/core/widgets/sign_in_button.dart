@@ -7,9 +7,6 @@ import '../../features/auth/controller/auth_controller.dart';
 //Constants
 import '../constants/constants.dart';
 
-//Colours
-import '../../theme/colours.dart';
-
 class SignInButton extends ConsumerWidget {
   const SignInButton({
     super.key,
@@ -26,7 +23,7 @@ class SignInButton extends ConsumerWidget {
       child: InkWell(
         onTap: () => signInWithGoogle(context, ref),
         child: CircleAvatar(
-          backgroundColor: Colours.greyColor,
+          backgroundColor: Colors.grey,
           radius: 25,
           child: Image.asset(
             Constants.googlePath,

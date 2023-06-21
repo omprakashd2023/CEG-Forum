@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
 
 //Pages
-import './features/auth/pages/login_page.dart';
-import './features/auth/pages/sign_up_page.dart';
+import './features/auth/pages/auth_page.dart';
 import './features/home/pages/home_page.dart';
 import './features/community/pages/create_community_page.dart';
 import './features/community/pages/community_page.dart';
@@ -63,6 +62,5 @@ final loggedInRoute = RouteMap(routes: {
 
 // loggedOut Routes
 final loggedOutRoute = RouteMap(routes: {
-  '/': (_) => const MaterialPage(child: LoginPage()),
-  '/sign-up': (_) => const MaterialPage(child: SignUpPage()),
+  '/': (_) => const MaterialPage(child: AuthPage()),
 });

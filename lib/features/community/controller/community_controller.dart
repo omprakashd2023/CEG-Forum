@@ -88,12 +88,15 @@ class CommunityController extends StateNotifier<bool> {
     return _communityRepository.getCommunityPosts(name);
   }
 
-  void createCommunity(String name, BuildContext context) async {
+  void createCommunity(
+      String name, String description, String username, BuildContext context) async {
     state = true;
     final uid = _ref.read(userProvider)?.uid ?? '';
     Community community = Community(
       id: name,
       name: name,
+      description: description,
+      admin: username,
       avatar: Constants.avatarDefault,
       banner: Constants.bannerDefault,
       members: [uid],

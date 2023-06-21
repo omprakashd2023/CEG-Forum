@@ -59,6 +59,7 @@ class UserProfileController extends StateNotifier<bool> {
     required File? avatarImage,
     required File? bannerImage,
     required String name,
+    required String description,
     required BuildContext context,
   }) async {
     state = true;
@@ -82,7 +83,10 @@ class UserProfileController extends StateNotifier<bool> {
         (r) => user = user.copyWith(banner: r),
       );
     }
-    user = user.copyWith(name: name);
+    user = user.copyWith(
+      name: name,
+      description: description,
+    );
     final res = await _userProfileRepository.editProfile(user);
     state = false;
     res.fold((l) => showSnackBar(context, l.message), (r) {

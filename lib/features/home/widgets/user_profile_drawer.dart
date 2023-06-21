@@ -67,9 +67,9 @@ class UserProfileDrawer extends ConsumerWidget {
             ),
             ListTile(
               title: const Text('Logout'),
-              leading: Icon(
+              leading: const Icon(
                 Icons.logout,
-                color: Colours.redColor,
+                color: Colors.red,
               ),
               onTap: () => logout(ref),
             ),

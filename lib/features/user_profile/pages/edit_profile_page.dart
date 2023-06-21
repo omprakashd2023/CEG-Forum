@@ -33,6 +33,9 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   File? bannerImage;
   File? avatarImage;
   late TextEditingController nameController;
+  late TextEditingController
+      descriptionController; // Added description controller
+
   void selectBannerImage() async {
     final result = await pickImage();
     if (result != null) {
@@ -56,6 +59,8 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
           avatarImage: avatarImage,
           bannerImage: bannerImage,
           name: nameController.text.trim(),
+          description:
+              descriptionController.text.trim(), // Pass description value
           context: context,
         );
   }
@@ -63,12 +68,17 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
   @override
   void dispose() {
     nameController.dispose();
+    descriptionController.dispose(); // Dispose description controller
     super.dispose();
   }
 
   @override
   void initState() {
     nameController = TextEditingController(text: ref.read(userProvider)!.name);
+    descriptionController = TextEditingController(
+        text: ref
+            .read(userProvider)!
+            .description); // Initialize description controller
     super.initState();
   }
 
@@ -164,6 +174,24 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                           decoration: InputDecoration(
                             filled: true,
                             labelText: 'Name',
+                            focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                color: Theme.of(context).primaryColor,
+                              ),
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.all(18.0),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 15.0,
+                        ),
+                        TextField(
+                          controller: descriptionController,
+                          decoration: InputDecoration(
+                            filled: true,
+                            labelText: 'Description',
                             focusedBorder: OutlineInputBorder(
                               borderSide: BorderSide(
                                 color: Theme.of(context).primaryColor,

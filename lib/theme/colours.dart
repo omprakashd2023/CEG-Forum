@@ -9,51 +9,57 @@ final themeNotifierProvider =
   return ThemeNotifier();
 });
 
-class Colours {
-  // Colors
-  static const blackColor = Color.fromRGBO(1, 1, 1, 1); // primary color
-  static const greyColor = Color.fromRGBO(26, 39, 45, 1); // secondary color
-  static const drawerColor = Color.fromRGBO(18, 18, 18, 1);
-  static const whiteColor = Colors.white;
-  static var redColor = Colors.red.shade500;
-  static var blueColor = Colors.blue.shade300;
+class RedditColors {
+  static const Color primaryOrange = Color(0xFFFF4500);
+  static const Color secondaryOrange = Color(0xFFFF8717);
+  static const Color periwinkle = Color(0xFF9494FF);
+  static const Color darkGray = Color(0xFF222222);
+  static const Color lightGray = Color(0xFFC6C6C6);
+  static const Color whiteBackground = Colors.white;
+}
 
-  // Themes
-  static var darkModeAppTheme = ThemeData.dark().copyWith(
-    scaffoldBackgroundColor: blackColor,
-    cardColor: greyColor,
+class AppThemes {
+  static final ThemeData lightTheme = ThemeData(
+    brightness: Brightness.light,
+    primaryColor: RedditColors.primaryOrange,
+    backgroundColor: RedditColors.whiteBackground,
     appBarTheme: const AppBarTheme(
-      backgroundColor: drawerColor,
-      iconTheme: IconThemeData(
-        color: whiteColor,
+      color: RedditColors.whiteBackground,
+      textTheme: TextTheme(
+        headline6: TextStyle(color: Colors.black, fontSize: 18),
       ),
+      iconTheme: IconThemeData(color: Colors.black),
+      elevation: 0,
     ),
-    drawerTheme: const DrawerThemeData(
-      backgroundColor: drawerColor,
+    textTheme: const TextTheme(
+      bodyText1: TextStyle(color: Colors.black),
+      bodyText2: TextStyle(color: Colors.black87),
     ),
-    primaryColor: redColor,
-    colorScheme: ColorScheme.dark(
-      background: drawerColor,
-      error: redColor,
-    ), // will be used as alternative background color
+    colorScheme: const ColorScheme.light().copyWith(
+      secondary: RedditColors.secondaryOrange, // Upvote
+      surface: RedditColors.periwinkle, // Downvote
+    ),
   );
 
-  static var lightModeAppTheme = ThemeData.light().copyWith(
-    scaffoldBackgroundColor: whiteColor,
-    cardColor: greyColor,
+  static final ThemeData darkTheme = ThemeData(
+    brightness: Brightness.dark,
+    primaryColor: RedditColors.darkGray,
+    backgroundColor: RedditColors.darkGray,
     appBarTheme: const AppBarTheme(
-      backgroundColor: whiteColor,
-      iconTheme: IconThemeData(
-        color: blackColor,
+      color: RedditColors.darkGray,
+      textTheme: TextTheme(
+        headline6: TextStyle(color: Colors.white, fontSize: 18),
       ),
+      iconTheme: IconThemeData(color: Colors.white),
+      elevation: 0,
     ),
-    drawerTheme: const DrawerThemeData(
-      backgroundColor: whiteColor,
+    textTheme: const TextTheme(
+      bodyText1: TextStyle(color: Colors.white),
+      bodyText2: TextStyle(color: Colors.white70),
     ),
-    primaryColor: redColor,
-    colorScheme: ColorScheme.light(
-      background: whiteColor,
-      error: redColor,
+    colorScheme: const ColorScheme.dark().copyWith(
+      secondary: RedditColors.secondaryOrange, // Upvote
+      surface: RedditColors.periwinkle, // Downvote
     ),
   );
 }
@@ -64,7 +70,7 @@ class ThemeNotifier extends StateNotifier<ThemeData> {
     ThemeMode mode = ThemeMode.light,
   })  : _mode = mode,
         super(
-          Colours.darkModeAppTheme,
+          AppThemes.darkTheme,
         ) {
     getTheme();
   }
@@ -76,10 +82,10 @@ class ThemeNotifier extends StateNotifier<ThemeData> {
     final theme = prefs.getString('theme');
     if (theme == 'light') {
       _mode = ThemeMode.light;
-      state = Colours.lightModeAppTheme;
+      state = AppThemes.lightTheme;
     } else {
       _mode = ThemeMode.dark;
-      state = Colours.darkModeAppTheme;
+      state = AppThemes.darkTheme;
     }
   }
 
@@ -87,11 +93,11 @@ class ThemeNotifier extends StateNotifier<ThemeData> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     if (_mode == ThemeMode.dark) {
       _mode = ThemeMode.light;
-      state = Colours.lightModeAppTheme;
+      state = AppThemes.lightTheme;
       prefs.setString('theme', 'light');
     } else {
       _mode = ThemeMode.dark;
-      state = Colours.darkModeAppTheme;
+      state = AppThemes.darkTheme;
       prefs.setString('theme', 'dark');
     }
   }

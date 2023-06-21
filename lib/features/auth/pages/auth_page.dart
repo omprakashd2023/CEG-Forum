@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:routemaster/routemaster.dart';
 
-//Constants
+// Constants
 import '../../../core/constants/constants.dart';
 
-//Controller
+// Controller
 import '../controller/auth_controller.dart';
 
-//Widgets
+// Widgets
 import '../../../core/widgets/sign_in_button.dart';
 import '../../../core/widgets/loader.dart';
 
-class SignUpPage extends ConsumerStatefulWidget {
-  const SignUpPage({super.key});
+enum AuthForm { login, signUp }
+
+// todo: Refactor the Auth Page
+
+class AuthPage extends ConsumerStatefulWidget {
+  const AuthPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _SignUpPageState();
+  ConsumerState<AuthPage> createState() => _AuthPageState();
 }
 
-class _SignUpPageState extends ConsumerState<SignUpPage> {
+class _AuthPageState extends ConsumerState<AuthPage>
+    with SingleTickerProviderStateMixin {
   final TextEditingController userNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -32,6 +36,23 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   bool isUserNameValid = true;
   String validationUserNameMessage = 'Please enter a username';
   String passwordErrorText = '';
+  AuthForm currentForm = AuthForm.login;
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 600),
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   // Function to validate username
   void validateUserName(String value) async {
@@ -82,6 +103,13 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
 
     setState(() {
       isEmailValid = emailRegex.hasMatch(value);
+    });
+  }
+
+  // Function to validate password
+  void validateLoginPassword(String value) {
+    setState(() {
+      isPasswordValid = value.isNotEmpty;
     });
   }
 
@@ -148,14 +176,36 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
   }
 
   void navigateToLoginPage() {
-    Routemaster.of(context).push('/');
+    if (currentForm == AuthForm.login) return;
+
+    _animationController.reverse().then((_) {
+      setState(() {
+        currentForm = AuthForm.login;
+      });
+    });
   }
 
-  void signInWithEmailAndPassword(
+  void navigateToSignUpPage() {
+    if (currentForm == AuthForm.signUp) return;
+
+    _animationController.reverse().then((_) {
+      setState(() {
+        currentForm = AuthForm.signUp;
+      });
+    });
+  }
+
+  void signUpWithEmailAndPassword(
       String username, String email, String password) {
     ref
         .read(authControllerProvider.notifier)
         .signInWithEmail(context, username, email, password);
+  }
+
+  void signInWithEmailAndPassword(String email, String password) {
+    ref
+        .read(authControllerProvider.notifier)
+        .signInWithEmail(context, null, email, password);
   }
 
   @override
@@ -168,6 +218,114 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
         child: Divider(
           color: Color(0xFFD9D9D9),
           height: 1.5,
+        ),
+      );
+    }
+
+    Widget buildLoginForm() {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          children: [
+            TextField(
+              keyboardType: TextInputType.emailAddress,
+              controller: emailController,
+              decoration: InputDecoration(
+                filled: true,
+                labelText: 'Email',
+                errorText: isEmailValid ? null : 'Please enter a valid email',
+              ),
+              onChanged: validateEmail,
+            ),
+            const SizedBox(height: 16.0),
+            TextField(
+              controller: passwordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                filled: true,
+                labelText: 'Password',
+                errorText: isPasswordValid ? null : 'Please enter a password',
+              ),
+              onChanged: validatePassword,
+            ),
+            const SizedBox(height: 20.0),
+            ElevatedButton(
+              onPressed: () {
+                if (isEmailValid && isPasswordValid && isConfirmPasswordValid) {
+                  signInWithEmailAndPassword(
+                      emailController.text, passwordController.text);
+                }
+              },
+              child: const Text('Sign In'),
+            ),
+          ],
+        ),
+      );
+    }
+
+    Widget buildSignUpForm() {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: userNameController,
+              decoration: InputDecoration(
+                filled: true,
+                labelText: 'Username',
+                errorMaxLines: 2,
+                errorText: isUserNameValid ? null : validationUserNameMessage,
+              ),
+              onChanged: validateUserName,
+            ),
+            const SizedBox(height: 16.0),
+            TextField(
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                filled: true,
+                labelText: 'Email',
+                errorText: isEmailValid ? null : 'Please enter a valid email',
+              ),
+              onChanged: validateEmail,
+            ),
+            const SizedBox(height: 16.0),
+            TextField(
+              controller: passwordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                filled: true,
+                labelText: 'Password',
+                errorText: isPasswordValid ? null : passwordErrorText,
+              ),
+              onChanged: validatePassword,
+            ),
+            const SizedBox(height: 16.0),
+            TextField(
+              controller: confirmPasswordController,
+              obscureText: true,
+              decoration: InputDecoration(
+                filled: true,
+                labelText: 'Confirm Password',
+                errorText:
+                    isConfirmPasswordValid ? null : 'Passwords do not match',
+              ),
+              onChanged: validateConfirmPassword,
+            ),
+            const SizedBox(height: 20.0),
+            ElevatedButton(
+              onPressed: () {
+                if (isEmailValid && isPasswordValid && isConfirmPasswordValid) {
+                  signUpWithEmailAndPassword(
+                    userNameController.text,
+                    emailController.text,
+                    passwordController.text,
+                  );
+                }
+              },
+              child: const Text('Sign Up'),
+            ),
+          ],
         ),
       );
     }
@@ -214,92 +372,34 @@ class _SignUpPageState extends ConsumerState<SignUpPage> {
                     padding: const EdgeInsets.all(8.0),
                     child: Image.asset(
                       Constants.loginEmotePath,
-                      height: 100,
+                      height: currentForm == AuthForm.login ? 150 : 100,
                       fit: BoxFit.cover,
                     ),
                   ),
                   const SizedBox(
                     height: 20,
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Column(
-                      children: [
-                        TextField(
-                          controller: userNameController,
-                          decoration: InputDecoration(
-                            filled: true,
-                            labelText: 'Username',
-                            errorMaxLines: 2,
-                            errorText: isUserNameValid
-                                ? null
-                                : validationUserNameMessage,
-                          ),
-                          onChanged: validateUserName,
-                        ),
-                        const SizedBox(height: 16.0),
-                        TextField(
-                          controller: emailController,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                            filled: true,
-                            labelText: 'Email',
-                            errorText: isEmailValid
-                                ? null
-                                : 'Please enter a valid email',
-                          ),
-                          onChanged: validateEmail,
-                        ),
-                        const SizedBox(height: 16.0),
-                        TextField(
-                          controller: passwordController,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            filled: true,
-                            labelText: 'Password',
-                            errorText:
-                                isPasswordValid ? null : passwordErrorText,
-                          ),
-                          onChanged: validatePassword,
-                        ),
-                        const SizedBox(height: 16.0),
-                        TextField(
-                          controller: confirmPasswordController,
-                          obscureText: true,
-                          decoration: InputDecoration(
-                            filled: true,
-                            labelText: 'Confirm Password',
-                            errorText: isConfirmPasswordValid
-                                ? null
-                                : 'Passwords do not match',
-                          ),
-                          onChanged: validateConfirmPassword,
-                        ),
-                        const SizedBox(height: 32.0),
-                        ElevatedButton(
-                          onPressed: () {
-                            if (isEmailValid &&
-                                isPasswordValid &&
-                                isConfirmPasswordValid) {
-                              signInWithEmailAndPassword(
-                                userNameController.text,
-                                emailController.text,
-                                passwordController.text,
-                              );
-                            }
-                          },
-                          child: const Text('Sign Up'),
-                        ),
-                      ],
-                    ),
+                  AnimatedCrossFade(
+                    duration: const Duration(milliseconds: 300),
+                    firstChild: buildLoginForm(),
+                    secondChild: buildSignUpForm(),
+                    crossFadeState: currentForm == AuthForm.login
+                        ? CrossFadeState.showFirst
+                        : CrossFadeState.showSecond,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text('Already have an account?'),
+                      currentForm == AuthForm.login
+                          ? const Text('Don\'t have an account?')
+                          : const Text('Already have an account?'),
                       TextButton(
-                        onPressed: navigateToLoginPage,
-                        child: const Text('Sign In'),
+                        onPressed: currentForm == AuthForm.login
+                            ? navigateToSignUpPage
+                            : navigateToLoginPage,
+                        child: currentForm == AuthForm.login
+                            ? const Text('Sign Up')
+                            : const Text('Sign In'),
                       ),
                     ],
                   ),

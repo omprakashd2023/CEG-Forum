@@ -8,6 +8,7 @@ import '../../../core/widgets/loader.dart';
 import '../../../core/utils.dart';
 
 //Controller
+import '../../auth/controller/auth_controller.dart';
 import '../controller/community_controller.dart';
 
 class CreateCommunityPage extends ConsumerStatefulWidget {
@@ -21,22 +22,31 @@ class CreateCommunityPage extends ConsumerStatefulWidget {
 class _CreateCommunityPageState extends ConsumerState<CreateCommunityPage> {
   final TextEditingController _communityNameController =
       TextEditingController();
+  final TextEditingController _communityDescriptionController =
+      TextEditingController();
 
   @override
   void dispose() {
     _communityNameController.dispose();
+    _communityDescriptionController.dispose();
     super.dispose();
   }
 
   void createCommunity() {
     final communityName = _communityNameController.text.trim();
+    final communityDescription = _communityDescriptionController.text.trim();
     if (communityName.isEmpty) {
       showSnackBar(context, 'Community name cannot be empty');
       return;
     }
-    ref
-        .read(communityControllerProvider.notifier)
-        .createCommunity(communityName, context);
+    if (communityDescription.isEmpty) {
+      showSnackBar(context, 'Community description cannot be empty');
+      return;
+    }
+
+    final user = ref.watch(userProvider)!;
+    ref.read(communityControllerProvider.notifier).createCommunity(
+        communityName, communityDescription, user.name, context);
   }
 
   @override
@@ -68,6 +78,28 @@ class _CreateCommunityPageState extends ConsumerState<CreateCommunityPage> {
                       contentPadding: EdgeInsets.all(18.0),
                     ),
                     maxLength: 25,
+                  ),
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                  const Align(
+                    alignment: Alignment.topLeft,
+                    child: Text('Description'),
+                  ),
+                  const SizedBox(
+                    height: 10.0,
+                  ),
+                  TextField(
+                    keyboardType: TextInputType.multiline,
+                    controller: _communityDescriptionController,
+                    decoration: const InputDecoration(
+                      filled: true,
+                      hintText: 'Enter a Description',
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.all(18.0),
+                    ),
+                    maxLength: 150,
+                    maxLines: 5,
                   ),
                   const SizedBox(
                     height: 10.0,

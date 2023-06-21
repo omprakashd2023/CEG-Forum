@@ -77,41 +77,66 @@ class CommunityPage extends ConsumerWidget {
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                                community.moderators.contains(user.uid)
-                                    ? OutlinedButton(
-                                        onPressed: () =>
-                                            navigateToModTools(context),
-                                        style: ElevatedButton.styleFrom(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20.0),
-                                            ),
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 25.0,
-                                            )),
-                                        child: const Text('Mod Tools'),
-                                      )
-                                    : OutlinedButton(
-                                        onPressed: () => joinCommunity(
-                                            ref, community, context),
-                                        style: ElevatedButton.styleFrom(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(20.0),
-                                            ),
-                                            padding: const EdgeInsets.symmetric(
-                                              horizontal: 25.0,
-                                            )),
-                                        child: Text(
-                                            community.members.contains(user.uid)
-                                                ? 'Joined'
-                                                : 'Join'),
+                              community.moderators.contains(user.uid)
+                                  ? OutlinedButton(
+                                      onPressed: () =>
+                                          navigateToModTools(context),
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20.0),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 25.0,
+                                        ),
                                       ),
+                                      child: const Text('Mod Tools'),
+                                    )
+                                  : OutlinedButton(
+                                      onPressed: () => joinCommunity(
+                                          ref, community, context),
+                                      style: ElevatedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20.0),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 25.0,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        community.members.contains(user.uid)
+                                            ? 'Joined'
+                                            : 'Join',
+                                      ),
+                                    ),
                             ],
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10.0),
-                            child: Text('${community.members.length} members'),
+                          Text('${community.members.length} members'),
+                          const SizedBox(height: 10.0),
+                          Text(
+                            'Created by ${community.admin}',
+                            style: TextStyle(
+                              fontSize: 13.0,
+                              color:
+                                  Theme.of(context).textTheme.bodySmall!.color,
+                            ),
+                          ),
+                          const SizedBox(height: 10.0),
+                          Card(
+                            elevation: 3.0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Text(
+                                community.description,
+                                style: const TextStyle(
+                                  fontSize: 16.0,
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
